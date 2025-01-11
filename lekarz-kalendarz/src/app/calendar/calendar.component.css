@@ -1,0 +1,50 @@
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .days {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .day {
+    flex: 1;
+  }
+  
+  .day-header {
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .slots {
+    display: grid;
+    grid-template-rows: repeat(12, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .slot {
+    border: 1px solid #ccc;
+    height: 2rem;
+  }
+  
+  .slot.reserved {
+    color: white;
+    text-align: center;
+  }
+  
+  .slot.past {
+    background: #f0f0f0;
+  }
+  
+  .slot.current {
+    border: 2px solid red;
+  }
+  
