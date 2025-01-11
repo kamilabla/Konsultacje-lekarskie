@@ -13,6 +13,10 @@ export class CalendarComponent {
   hours: string[] = []; // Tablica godzin
   currentWeek = new Date().toLocaleDateString(); // Bieżący tydzień w czytelnym formacie
 
+  activeSlot: any = null; // Przechowywanie aktywnego slotu
+  tooltipX = 0; // Pozycja X dla tooltipa
+  tooltipY = 0; // Pozycja Y dla tooltipa
+
   constructor() {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
   }
@@ -42,7 +46,7 @@ export class CalendarComponent {
         time: i,
         reserved: Math.random() > 0.7,
         type: Math.random() > 0.5 ? 'konsultacja' : 'wizytacja',
-        details: `Slot ${i} - Szczegóły`,
+        details: `Szczegóły wizyty o ${Math.floor(i)}:${i % 1 === 0 ? '00' : '30'}`,
       });
     }
     return slots;
@@ -90,19 +94,29 @@ export class CalendarComponent {
     );
   }
 
+  // showDetails(slot: any, event: MouseEvent) {
+  //   this.activeSlot = slot;
+  //   const rect = (event.target as HTMLElement).getBoundingClientRect();
+  //   this.tooltipX = rect.left + window.scrollX + rect.width / 2; // Pozycja centralna w poziomie
+  //   this.tooltipY = rect.top + window.scrollY - 10; // Nad elementem
+  // }
+  
+  showDetails(slot: any, event: MouseEvent) {
+    this.activeSlot = slot;
+    this.tooltipX = event.clientX + 2; // Pozycja X kursora
+    this.tooltipY = event.clientY + 2; // Pozycja Y kursora
+  }
+  
+
+  hideDetails() {
+    this.activeSlot = null; // Ukrycie szczegółów wizyty
+  }
+
   prevWeek() {
     console.log('Poprzedni tydzień');
   }
 
   nextWeek() {
     console.log('Następny tydzień');
-  }
-
-  showDetails(slot: any) {
-    console.log('Pokaż szczegóły:', slot.details);
-  }
-
-  hideDetails() {
-    console.log('Ukryj szczegóły');
   }
 }

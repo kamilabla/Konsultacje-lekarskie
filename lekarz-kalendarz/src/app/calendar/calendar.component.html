@@ -6,14 +6,12 @@
     </div>
   
     <div class="content">
-      <!-- Kolumna z godzinami -->
       <div class="hours">
         <div *ngFor="let hour of hours" class="hour">
           {{ hour }}
         </div>
       </div>
   
-      <!-- Kalendarz dni -->
       <div class="days">
         <div
           *ngFor="let day of days"
@@ -34,11 +32,12 @@
                 current: isCurrent(day.date, slot.time)
               }"
               [style.background]="slot.reserved ? getConsultationColor(slot.type) : ''"
-              (mouseover)="showDetails(slot)"
+              (mouseover)="showDetails(slot, $event)"
               (mouseout)="hideDetails()"
             >
-              <div *ngIf="slot.reserved" class="tooltip">
-                {{ slot.details }}
+              <span *ngIf="slot.reserved">{{ slot.details }}</span> <!-- Zawsze widoczny tekst -->
+              <div *ngIf="activeSlot === slot" class="tooltip" [style.top.px]="tooltipY" [style.left.px]="tooltipX">
+                Szczegóły: {{ slot.details }}
               </div>
             </div>
           </div>
