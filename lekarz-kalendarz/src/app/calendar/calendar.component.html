@@ -5,6 +5,24 @@
       <button (click)="nextWeek()">Następny tydzień</button>
     </div>
   
+    <!-- Formularz ustawiania dostępności -->
+    <div class="availability-form">
+      <h3>Ustaw dostępność</h3>
+      <label>
+        Data:
+        <input type="date" [(ngModel)]="selectedDate" />
+      </label>
+      <label>
+        Godzina początkowa:
+        <input type="number" [(ngModel)]="startHour" min="0" max="23" />
+      </label>
+      <label>
+        Godzina końcowa:
+        <input type="number" [(ngModel)]="endHour" min="0" max="23" />
+      </label>
+      <button (click)="addAvailability()">Dodaj dostępność</button>
+    </div>
+  
     <div class="content">
       <div class="hours">
         <div *ngFor="let hour of hours" class="hour">
@@ -29,14 +47,25 @@
               [ngClass]="{
                 reserved: slot.reserved,
                 past: isPast(day.date, slot.time),
-                current: isCurrent(day.date, slot.time)
+                current: isCurrent(day.date, slot.time),
+                available: isAvailable(day.date, slot.time)
               }"
-              [style.background]="slot.reserved ? getConsultationColor(slot.type) : ''"
+              [style.background]="slot.reserved 
+                ? getConsultationColor(slot.type) 
+                : isAvailable(day.date, slot.time) 
+                ? 'lightgreen' 
+                : ''"
               (mouseover)="showDetails(slot, $event)"
               (mouseout)="hideDetails()"
             >
-              <span *ngIf="slot.reserved">{{ slot.details }}</span> <!-- Zawsze widoczny tekst -->
-              <div *ngIf="activeSlot === slot" class="tooltip" [style.top.px]="tooltipY" [style.left.px]="tooltipX">
+              <span *ngIf="slot.reserved">{{ slot.details }}</span>
+              <span *ngIf="!slot.reserved && isAvailable(day.date, slot.time)">Dostępny</span>
+              <div
+                *ngIf="activeSlot === slot"
+                class="tooltip"
+                [style.top.px]="tooltipY"
+                [style.left.px]="tooltipX"
+              >
                 Szczegóły: {{ slot.details }}
               </div>
             </div>

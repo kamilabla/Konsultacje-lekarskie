@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Dodaj FormsModule
+
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
 })
@@ -16,6 +18,11 @@ export class CalendarComponent {
   activeSlot: any = null; // Przechowywanie aktywnego slotu
   tooltipX = 0; // Pozycja X dla tooltipa
   tooltipY = 0; // Pozycja Y dla tooltipa
+
+  availability: { [date: string]: { start: number; end: number }[] } = {}; // Dostępność na dzień
+  selectedDate: string = ''; // Przechowuje wybraną datę
+  startHour: number = 9; // Domyślna godzina początkowa
+  endHour: number = 15; // Domyślna godzina końcowa
 
   constructor() {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
@@ -119,4 +126,39 @@ export class CalendarComponent {
   nextWeek() {
     console.log('Następny tydzień');
   }
+
+  setAvailability(date: Date, startHour: number, endHour: number) {
+    const dateString = date.toISOString().split('T')[0]; // Format yyyy-MM-dd
+    if (!this.availability[dateString]) {
+      this.availability[dateString] = [];
+    }
+  
+    this.availability[dateString].push({ start: startHour, end: endHour });
+    console.log(`Dostępność ustawiona dla ${dateString}: ${startHour}-${endHour}`);
+  }
+
+  addAvailability() {
+    if (!this.selectedDate || this.startHour >= this.endHour) {
+      console.error('Nieprawidłowe dane dostępności!');
+      return;
+    }
+  
+    const date = new Date(this.selectedDate);
+    this.setAvailability(date, this.startHour, this.endHour);
+  }
+
+  isAvailable(date: Date, time: number): boolean {
+    const dateString = date.toISOString().split('T')[0]; // Format yyyy-MM-dd
+    const dayAvailability = this.availability[dateString];
+  
+    if (!dayAvailability) {
+      return false;
+    }
+  
+    return dayAvailability.some(
+      (range) => time >= range.start && time < range.end
+    );
+  }
+  
+  
 }

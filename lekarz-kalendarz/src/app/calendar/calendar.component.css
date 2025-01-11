@@ -107,6 +107,13 @@
     color: black;
     transform: translate(-50%, -100%); /* Wyśrodkowanie poziome i przesunięcie nad blok */
   }
+
+  .slot.available {
+    background-color: lightgreen;
+    color: black;
+    font-weight: bold;
+  }
+  
   
   
   
