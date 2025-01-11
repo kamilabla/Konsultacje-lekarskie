@@ -24,6 +24,9 @@ export class CalendarComponent {
   startHour: number = 9; // Domyślna godzina początkowa
   endHour: number = 15; // Domyślna godzina końcowa
 
+  absenceDate: string = ''; // Dla nieobecności
+  absences: string[] = []; // Przechowuje daty nieobecności w formacie 'yyyy-MM-dd'
+
   constructor() {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
   }
@@ -101,12 +104,6 @@ export class CalendarComponent {
     );
   }
 
-  // showDetails(slot: any, event: MouseEvent) {
-  //   this.activeSlot = slot;
-  //   const rect = (event.target as HTMLElement).getBoundingClientRect();
-  //   this.tooltipX = rect.left + window.scrollX + rect.width / 2; // Pozycja centralna w poziomie
-  //   this.tooltipY = rect.top + window.scrollY - 10; // Nad elementem
-  // }
   
   showDetails(slot: any, event: MouseEvent) {
     this.activeSlot = slot;
@@ -126,6 +123,8 @@ export class CalendarComponent {
   nextWeek() {
     console.log('Następny tydzień');
   }
+
+
 
   setAvailability(date: Date, startHour: number, endHour: number) {
     const dateString = date.toISOString().split('T')[0]; // Format yyyy-MM-dd
@@ -159,6 +158,33 @@ export class CalendarComponent {
       (range) => time >= range.start && time < range.end
     );
   }
+
+
+  addAbsence(date: string) {
+    if (!this.absences.includes(date)) {
+      this.absences.push(date);
+      this.handleConflictsForAbsence(date); // Sprawdź konflikty z konsultacjami
+    }
+  }
+  
+  handleConflictsForAbsence(date: string) {
+    const day = this.days.find(d => d.date.toISOString().split('T')[0] === date);
+    if (day) {
+      day.slots.forEach(slot => {
+        if (slot.reserved) {
+          slot.reserved = false;
+          slot.details = 'Odwołano wizytę z powodu nieobecności lekarza';
+        }
+      });
+    }
+  }
+
+  isAbsent(date: Date): boolean {
+    const dateString = date.toISOString().split('T')[0];
+    return this.absences.includes(dateString);
+  }
+  
+  
   
   
 }

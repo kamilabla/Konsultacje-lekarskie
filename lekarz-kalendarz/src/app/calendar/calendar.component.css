@@ -173,6 +173,25 @@
     background-color: #b662c7;
   }
   
+  .day.absent {
+    background-color: #ffcccc; /* Czerwone tło dla nieobecności */
+    color: #900; /* Ciemniejszy czerwony dla tekstu */
+  }
+  
+  .absence-note {
+    font-weight: bold;
+    color: #900;
+  }
+  
+  .absence-form {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+  }
+  
   
   
   

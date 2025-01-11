@@ -7,34 +7,43 @@
   
     <!-- Formularz ustawiania dostępności -->
     <div class="availability-form">
-        <h3>Ustaw dostępność</h3>
-        <div class="form-group">
-          <label for="date">Data:</label>
-          <input id="date" type="date" [(ngModel)]="selectedDate" />
-        </div>
-        <div class="form-group">
-          <label for="start-hour">Godzina początkowa:</label>
-          <input
-            id="start-hour"
-            type="number"
-            [(ngModel)]="startHour"
-            min="0"
-            max="23"
-          />
-        </div>
-        <div class="form-group">
-          <label for="end-hour">Godzina końcowa:</label>
-          <input
-            id="end-hour"
-            type="number"
-            [(ngModel)]="endHour"
-            min="0"
-            max="23"
-          />
-        </div>
-        <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+      <h3>Ustaw dostępność</h3>
+      <div class="form-group">
+        <label for="date">Data:</label>
+        <input id="date" type="date" [(ngModel)]="selectedDate" />
       </div>
-      
+      <div class="form-group">
+        <label for="start-hour">Godzina początkowa:</label>
+        <input
+          id="start-hour"
+          type="number"
+          [(ngModel)]="startHour"
+          min="0"
+          max="23"
+        />
+      </div>
+      <div class="form-group">
+        <label for="end-hour">Godzina końcowa:</label>
+        <input
+          id="end-hour"
+          type="number"
+          [(ngModel)]="endHour"
+          min="0"
+          max="23"
+        />
+      </div>
+      <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+    </div>
+  
+    <!-- Formularz dodawania nieobecności -->
+    <div class="absence-form">
+      <h3>Dodaj dzień nieobecności</h3>
+      <div class="form-group">
+        <label for="absence-date">Data:</label>
+        <input id="absence-date" type="date" [(ngModel)]="absenceDate" />
+      </div>
+      <button class="btn" (click)="addAbsence(absenceDate)">Dodaj nieobecność</button>
+    </div>
   
     <div class="content">
       <div class="hours">
@@ -47,13 +56,17 @@
         <div
           *ngFor="let day of days"
           class="day"
-          [ngClass]="{ 'today': isToday(day.date) }"
+          [ngClass]="{ 
+            'today': isToday(day.date),
+            'absent': isAbsent(day.date)
+          }"
         >
           <div class="day-header">
             {{ day.date | date: 'EEEE, d MMMM' }}
-            <span>{{ day.consultations.length }} wizyt</span>
+            <span *ngIf="isAbsent(day.date)" class="absence-note">Nieobecność</span>
+            <span *ngIf="!isAbsent(day.date)">{{ day.consultations.length }} wizyt</span>
           </div>
-          <div class="slots">
+          <div class="slots" *ngIf="!isAbsent(day.date)">
             <div
               *ngFor="let slot of day.slots"
               class="slot"
