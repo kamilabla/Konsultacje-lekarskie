@@ -7,21 +7,34 @@
   
     <!-- Formularz ustawiania dostępności -->
     <div class="availability-form">
-      <h3>Ustaw dostępność</h3>
-      <label>
-        Data:
-        <input type="date" [(ngModel)]="selectedDate" />
-      </label>
-      <label>
-        Godzina początkowa:
-        <input type="number" [(ngModel)]="startHour" min="0" max="23" />
-      </label>
-      <label>
-        Godzina końcowa:
-        <input type="number" [(ngModel)]="endHour" min="0" max="23" />
-      </label>
-      <button (click)="addAvailability()">Dodaj dostępność</button>
-    </div>
+        <h3>Ustaw dostępność</h3>
+        <div class="form-group">
+          <label for="date">Data:</label>
+          <input id="date" type="date" [(ngModel)]="selectedDate" />
+        </div>
+        <div class="form-group">
+          <label for="start-hour">Godzina początkowa:</label>
+          <input
+            id="start-hour"
+            type="number"
+            [(ngModel)]="startHour"
+            min="0"
+            max="23"
+          />
+        </div>
+        <div class="form-group">
+          <label for="end-hour">Godzina końcowa:</label>
+          <input
+            id="end-hour"
+            type="number"
+            [(ngModel)]="endHour"
+            min="0"
+            max="23"
+          />
+        </div>
+        <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+      </div>
+      
   
     <div class="content">
       <div class="hours">
