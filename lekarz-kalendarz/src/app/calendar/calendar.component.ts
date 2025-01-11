@@ -107,8 +107,6 @@ export class CalendarComponent {
   
   showDetails(slot: any, event: MouseEvent) {
     this.activeSlot = slot;
-    this.tooltipX = event.clientX + 2; // Pozycja X kursora
-    this.tooltipY = event.clientY + 2; // Pozycja Y kursora
   }
   
 
