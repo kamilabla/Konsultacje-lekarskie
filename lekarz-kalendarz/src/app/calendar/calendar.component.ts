@@ -1,18 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule], // Dodano CommonModule
+  imports: [CommonModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent {
-  days = this.generateWeek();
+  days = this.generateWeek(); // Generowanie dni tygodnia
+  hours: string[] = []; // Tablica godzin
+  currentWeek = new Date().toLocaleDateString(); // Bieżący tydzień w czytelnym formacie
 
-  currentWeek = new Date().toLocaleDateString();
+  constructor() {
+    this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
+  }
 
   generateWeek() {
     const week = [];
@@ -45,6 +48,18 @@ export class CalendarComponent {
     return slots;
   }
 
+  generateHours() {
+    const startHour = 9; // Godzina startowa
+    const endHour = 15; // Godzina końcowa
+    const interval = 0.5; // Interwał w godzinach (30 minut)
+
+    for (let hour = startHour; hour <= endHour; hour += interval) {
+      const fullHour = Math.floor(hour);
+      const minutes = hour % 1 === 0 ? '00' : '30';
+      this.hours.push(`${fullHour}:${minutes}`);
+    }
+  }
+
   getConsultationColor(type: string): string {
     return type === 'konsultacja' ? 'lightblue' : 'lightgreen';
   }
@@ -63,6 +78,15 @@ export class CalendarComponent {
     return (
       slotTime.getDate() === now.getDate() &&
       slotTime.getHours() === now.getHours()
+    );
+  }
+
+  isToday(date: Date): boolean {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
     );
   }
 

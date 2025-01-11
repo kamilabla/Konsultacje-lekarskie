@@ -5,27 +5,41 @@
       <button (click)="nextWeek()">Następny tydzień</button>
     </div>
   
-    <div class="days">
-      <div *ngFor="let day of days" class="day">
-        <div class="day-header">
-          {{ day.date | date: 'EEEE, d MMMM' }}
-          <span>{{ day.consultations.length }} wizyt</span>
+    <div class="content">
+      <!-- Kolumna z godzinami -->
+      <div class="hours">
+        <div *ngFor="let hour of hours" class="hour">
+          {{ hour }}
         </div>
-        <div class="slots">
-          <div
-            *ngFor="let slot of day.slots"
-            class="slot"
-            [ngClass]="{
-              reserved: slot.reserved,
-              past: isPast(day.date, slot.time),
-              current: isCurrent(day.date, slot.time)
-            }"
-            [style.background]="slot.reserved ? getConsultationColor(slot.type) : ''"
-            (mouseover)="showDetails(slot)"
-            (mouseout)="hideDetails()"
-          >
-            <div *ngIf="slot.reserved" class="tooltip">
-              {{ slot.details }}
+      </div>
+  
+      <!-- Kalendarz dni -->
+      <div class="days">
+        <div
+          *ngFor="let day of days"
+          class="day"
+          [ngClass]="{ 'today': isToday(day.date) }"
+        >
+          <div class="day-header">
+            {{ day.date | date: 'EEEE, d MMMM' }}
+            <span>{{ day.consultations.length }} wizyt</span>
+          </div>
+          <div class="slots">
+            <div
+              *ngFor="let slot of day.slots"
+              class="slot"
+              [ngClass]="{
+                reserved: slot.reserved,
+                past: isPast(day.date, slot.time),
+                current: isCurrent(day.date, slot.time)
+              }"
+              [style.background]="slot.reserved ? getConsultationColor(slot.type) : ''"
+              (mouseover)="showDetails(slot)"
+              (mouseout)="hideDetails()"
+            >
+              <div *ngIf="slot.reserved" class="tooltip">
+                {{ slot.details }}
+              </div>
             </div>
           </div>
         </div>

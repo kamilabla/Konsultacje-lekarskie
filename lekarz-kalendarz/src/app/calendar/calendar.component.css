@@ -48,3 +48,43 @@
     border: 2px solid red;
   }
   
+  .today {
+    border: 2px solid red;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background-color: #fffbe6; /* Opcjonalne delikatne podświetlenie */
+  }
+
+  .content {
+    display: flex;
+  }
+  
+  .hours {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 1rem;
+  }
+  
+  .hour {
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .days {
+    flex: 1;
+    display: flex;
+  }
+  
+  .day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
