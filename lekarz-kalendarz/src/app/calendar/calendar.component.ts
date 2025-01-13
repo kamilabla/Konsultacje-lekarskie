@@ -43,6 +43,7 @@ export class CalendarComponent {
   constructor(private firestore: Firestore) {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
     this.fetchConsultationsFromFirebase(); // Pobierz dane na starcie
+    this.fetchAvailabilityFromFirebase(); // Pobranie dostępności
   }
 
 
@@ -67,8 +68,9 @@ export class CalendarComponent {
   generateSlots(date: Date) {
     const slots = [];
     for (let i = 9; i < 15; i += 0.5) {
+      const timeString = this.convertDecimalToTime(i); // Konwersja na hh:mm
       slots.push({
-        time: i,
+        time: timeString, // Zapis jako string
         reserved: false,
         type: '',
         details: '',
@@ -110,47 +112,6 @@ export class CalendarComponent {
     this.selectedSlot = null;
   }
 
-  // submitBooking() {
-  //   if (!this.selectedSlot || !this.booking) {
-  //     console.error('Nie wybrano slotu lub brak danych rezerwacji!');
-  //     return;
-  //   }
-  
-  //   const day = this.days.find((d) => d.slots.includes(this.selectedSlot));
-  
-  //   if (!day) {
-  //     console.error('Nie znaleziono dnia dla wybranego slotu!');
-  //     return;
-  //   }
-  
-  //   // Sprawdź dostępność sąsiednich slotów
-  //   const slotIndex = day.slots.indexOf(this.selectedSlot);
-  //   const slotsToCheck = Math.ceil(this.booking.duration / 0.5);
-  
-  //   for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
-  //     if (
-  //       i >= day.slots.length || // Sprawdzanie końca dnia
-  //       day.slots[i].reserved || // Sprawdzenie czy slot jest już zarezerwowany
-  //       !this.isAvailable(day.date, day.slots[i].time) // Sprawdzenie dostępności
-  //     ) {
-  //       console.error(
-  //         'Nie można zarezerwować, brak ciągłości dostępnych slotów!'
-  //       );
-  //       return;
-  //     }
-  //   }
-  
-  //   // Zarezerwuj sloty
-  //   for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
-  //     day.slots[i].reserved = true;
-  //     day.slots[i].type = this.booking.type;
-  //     day.slots[i].details = `Konsultacja: ${this.booking.type}, ${this.booking.name}`;
-  //   }
-  
-  //   console.log('Konsultacja zarezerwowana!');
-  //   this.cancelBooking(); // Zamknij formularz i wyczyść dane
-  // }
-
   async submitBooking() {
     if (!this.selectedSlot || !this.booking) {
       console.error('Nie wybrano slotu lub brak danych rezerwacji!');
@@ -186,7 +147,7 @@ export class CalendarComponent {
   
     const consultation = {
       date: day.date,
-      startTime: this.selectedSlot.time,
+      startTime: this.selectedSlot.time, // Przekazujemy time jako string
       duration: this.booking.duration,
       type: this.booking.type,
       name: this.booking.name,
@@ -200,9 +161,10 @@ export class CalendarComponent {
     this.cancelBooking();
   }
   
+
   
 
-  isAvailable(date: Date, time: number): boolean {
+  isAvailable(date: Date, time: string): boolean {
     const dateString = date.toISOString().split('T')[0]; // Format yyyy-MM-dd
     const dayAvailability = this.availability[dateString];
   
@@ -210,32 +172,38 @@ export class CalendarComponent {
       return false;
     }
   
+    const timeDecimal = this.convertTimeToDecimal(time); // Konwersja hh:mm na liczbę dziesiętną
     return dayAvailability.some(
-      (range) => time >= range.start && time < range.end
+      (range) => timeDecimal >= range.start && timeDecimal < range.end
     );
   }
+  
 
 
   getConsultationColor(type: string): string {
     return type === 'konsultacja' ? 'lightblue' : 'lightgreen';
   }
 
-  isPast(date: Date, time: number): boolean {
+  isPast(date: Date, time: string): boolean {
     const now = new Date();
     const slotTime = new Date(date);
-    slotTime.setHours(Math.floor(time), (time % 1) * 60);
+    const timeDecimal = this.convertTimeToDecimal(time); // Konwersja hh:mm na liczbę dziesiętną
+    slotTime.setHours(Math.floor(timeDecimal), (timeDecimal % 1) * 60);
     return slotTime < now;
   }
+  
 
-  isCurrent(date: Date, time: number): boolean {
+  isCurrent(date: Date, time: string): boolean {
     const now = new Date();
     const slotTime = new Date(date);
-    slotTime.setHours(Math.floor(time), (time % 1) * 60);
+    const timeDecimal = this.convertTimeToDecimal(time); // Konwersja hh:mm na liczbę dziesiętną
+    slotTime.setHours(Math.floor(timeDecimal), (timeDecimal % 1) * 60);
     return (
       slotTime.getDate() === now.getDate() &&
       slotTime.getHours() === now.getHours()
     );
   }
+  
 
   isToday(date: Date): boolean {
     const today = new Date();
@@ -364,7 +332,6 @@ export class CalendarComponent {
       console.error('Błąd podczas dodawania konsultacji:', error);
     }
   }
-
   async fetchConsultationsFromFirebase() {
     try {
       const consultationCollection = collection(this.firestore, 'consultations');
@@ -373,7 +340,6 @@ export class CalendarComponent {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
   
-        // Obsługa potencjalnego błędu podczas konwersji daty
         if (data['date'] && data['date'].toDate) {
           const consultationDate = data['date'].toDate(); // Konwersja Timestamp na Date
           const day = this.days.find(
@@ -385,7 +351,7 @@ export class CalendarComponent {
           if (day) {
             // Przypisanie do odpowiedniego slotu
             const slotIndex = day.slots.findIndex(
-              (slot) => slot.time === this.convertTimeToDecimal(data['startTime'])
+              (slot) => slot.time === data['startTime'] // Porównanie z użyciem string
             );
   
             if (slotIndex !== -1) {
@@ -409,7 +375,6 @@ export class CalendarComponent {
     }
   }
   
-
   async updateConsultationInFirebase(id: string, updatedData: any) {
     try {
       const consultationDoc = doc(this.firestore, 'consultations', id);
@@ -476,12 +441,43 @@ export class CalendarComponent {
   
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log('Dostępność:', data);
+  
+        // Upewnij się, że istnieje pole `date` i jest w poprawnym formacie
+        if (data['date'] && data['date'].toDate) {
+          const availabilityDate = data['date'].toDate(); // Konwersja Firebase Timestamp na Date
+          const day = this.days.find(
+            (d) =>
+              d.date.toISOString().split('T')[0] ===
+              availabilityDate.toISOString().split('T')[0]
+          );
+  
+          if (day) {
+            // Aktualizacja slotów na podstawie dostępności z Firebase
+            const slotsFromFirebase = data['slots'] || [];
+            day.slots.forEach((slot) => {
+              const matchingSlot = slotsFromFirebase.find(
+                (firebaseSlot: any) => firebaseSlot.time === slot.time
+              );
+              if (matchingSlot) {
+                slot.reserved = matchingSlot.reserved;
+                slot.details = matchingSlot.details || '';
+              }
+            });
+          }
+        } else {
+          console.error(
+            `Pole "date" jest niepoprawne w dokumencie ${doc.id}:`,
+            data
+          );
+        }
       });
+  
+      console.log('Dostępność lekarza została załadowana.');
     } catch (error) {
       console.error('Błąd podczas pobierania dostępności:', error);
     }
   }
+  
   
 
   generateSlotsFromRange(startTime: string, endTime: string): any[] {
