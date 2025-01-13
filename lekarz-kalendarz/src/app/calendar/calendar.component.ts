@@ -73,6 +73,9 @@ export class CalendarComponent {
         type: '',
         details: '',
         status: '', // Dodano status
+        name: '',   // Nowe pole
+        gender: '', // Nowe pole
+        age: null,  // Nowe pole
       });
     }
     return slots;
@@ -379,13 +382,46 @@ export class CalendarComponent {
     try {
       const consultationCollection = collection(this.firestore, 'consultations');
       const querySnapshot = await getDocs(consultationCollection);
+  
       querySnapshot.forEach((doc) => {
-        console.log(`Dokument ID: ${doc.id}, dane:`, doc.data());
+        const data = doc.data();
+  
+        // Obsługa potencjalnego błędu podczas konwersji daty
+        if (data['date'] && data['date'].toDate) {
+          const consultationDate = data['date'].toDate(); // Konwersja Timestamp na Date
+          const day = this.days.find(
+            (d) =>
+              d.date.toISOString().split('T')[0] ===
+              consultationDate.toISOString().split('T')[0]
+          );
+  
+          if (day) {
+            // Przypisanie do odpowiedniego slotu
+            const slotIndex = day.slots.findIndex(
+              (slot) => slot.time === this.convertTimeToDecimal(data['startTime'])
+            );
+  
+            if (slotIndex !== -1) {
+              day.slots[slotIndex].reserved = true;
+              day.slots[slotIndex].type = data['type'];
+              day.slots[slotIndex].details = data['notes'];
+              day.slots[slotIndex]['name'] = data['name'];
+              day.slots[slotIndex]['gender'] = data['gender'];
+              day.slots[slotIndex]['age'] = data['age'];
+            }
+          }
+        } else {
+          console.error(
+            `Pole "date" jest niepoprawne w dokumencie ${doc.id}:`,
+            data
+          );
+        }
       });
     } catch (error) {
       console.error('Błąd podczas pobierania konsultacji:', error);
     }
   }
+  
 
   async updateConsultationInFirebase(id: string, updatedData: any) {
     try {
@@ -405,6 +441,11 @@ export class CalendarComponent {
     } catch (error) {
       console.error('Błąd podczas usuwania konsultacji:', error);
     }
+  }
+  
+  convertTimeToDecimal(time: string): number {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours + minutes / 60;
   }
   
   
