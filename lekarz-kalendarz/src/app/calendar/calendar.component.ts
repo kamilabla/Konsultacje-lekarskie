@@ -444,9 +444,15 @@ export class CalendarComponent {
   }
   
   convertTimeToDecimal(time: string): number {
+    if (typeof time !== 'string') {
+      console.error('Niepoprawny format czasu:', time);
+      return NaN;
+    }
+  
     const [hours, minutes] = time.split(':').map(Number);
     return hours + minutes / 60;
   }
+  
   
   
   
