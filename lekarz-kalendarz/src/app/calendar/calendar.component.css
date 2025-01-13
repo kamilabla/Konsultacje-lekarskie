@@ -347,5 +347,11 @@
     background-color: darkred;
   }
   
+  .slot.cancelled {
+    background-color: #ffe5e5; /* Jasny czerwony dla odwołanych */
+    color: #900; /* Ciemny czerwony tekst */
+    font-style: italic;
+  }
+  
   
   

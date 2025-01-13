@@ -69,6 +69,7 @@ export class CalendarComponent {
         reserved: false,
         type: '',
         details: '',
+        status: '', // Dodano status
       });
     }
     return slots;
@@ -244,8 +245,8 @@ export class CalendarComponent {
     if (day) {
       day.slots.forEach(slot => {
         if (slot.reserved) {
-          slot.reserved = false;
-          slot.details = 'Odwołano wizytę z powodu nieobecności lekarza';
+          slot.status = 'Odwołana'; // Nowa właściwość statusu
+          slot.details = `${slot.details} (odwołana z powodu nieobecności lekarza)`;
         }
       });
     }

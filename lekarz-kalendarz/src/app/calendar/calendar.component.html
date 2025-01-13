@@ -5,12 +5,6 @@
     <button (click)="nextWeek()">Następny tydzień</button>
   </div>
 
-    <!-- Przyciski akcji -->
-    <!-- <div class="actions" *ngIf="selectedSlot">
-      <h3>Wybrana rezerwacja</h3>
-      <p>{{ selectedSlot.details }}</p>
-      <button class="btn" (click)="cancelReservation()">Odwołaj rezerwację</button>
-    </div> -->
 
   <!-- Formularz rezerwacji konsultacji -->
   <div *ngIf="showBookingForm" class="booking-form">
@@ -93,12 +87,16 @@
               reserved: slot.reserved,
               past: isPast(day.date, slot.time),
               current: isCurrent(day.date, slot.time),
-              available: isAvailable(day.date, slot.time)
+              available: isAvailable(day.date, slot.time),
+              cancelled: slot.status === 'Odwołana'
             }"
-            [style.background]="slot.reserved 
-              ? getConsultationColor(slot.type) 
-              : isAvailable(day.date, slot.time) 
-              ? 'lightgreen' 
+            [style.background]="
+            slot.status === 'Odwołana'
+              ? '#ffe5e5'
+              : slot.reserved
+              ? getConsultationColor(slot.type)
+              : isAvailable(day.date, slot.time)
+              ? 'lightgreen'
               : ''"
             (click)="isAvailable(day.date, slot.time) ? openBookingForm(slot, day) : null"
             (mouseover)="showDetails(slot, $event)"
