@@ -104,23 +104,27 @@ export class CalendarComponent {
   }
 
   submitBooking() {
-    const day = this.days.find((d) =>
-      d.slots.includes(this.selectedSlot)
-    );
-
+    if (!this.selectedSlot || !this.booking) {
+      console.error('Nie wybrano slotu lub brak danych rezerwacji!');
+      return;
+    }
+  
+    const day = this.days.find((d) => d.slots.includes(this.selectedSlot));
+  
     if (!day) {
       console.error('Nie znaleziono dnia dla wybranego slotu!');
       return;
     }
-
+  
     // Sprawdź dostępność sąsiednich slotów
     const slotIndex = day.slots.indexOf(this.selectedSlot);
     const slotsToCheck = Math.ceil(this.booking.duration / 0.5);
-
+  
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       if (
-        i >= day.slots.length ||
-        !this.isAvailable(day.date, day.slots[i].time)
+        i >= day.slots.length || // Sprawdzanie końca dnia
+        day.slots[i].reserved || // Sprawdzenie czy slot jest już zarezerwowany
+        !this.isAvailable(day.date, day.slots[i].time) // Sprawdzenie dostępności
       ) {
         console.error(
           'Nie można zarezerwować, brak ciągłości dostępnych slotów!'
@@ -128,17 +132,18 @@ export class CalendarComponent {
         return;
       }
     }
-
+  
     // Zarezerwuj sloty
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       day.slots[i].reserved = true;
       day.slots[i].type = this.booking.type;
-      day.slots[i].details = `Konsultacja z ${this.booking.name}`;
+      day.slots[i].details = `Konsultacja: ${this.booking.type}, ${this.booking.name}`;
     }
-
+  
     console.log('Konsultacja zarezerwowana!');
-    this.cancelBooking();
+    this.cancelBooking(); // Zamknij formularz i wyczyść dane
   }
+  
 
   isAvailable(date: Date, time: number): boolean {
     const dateString = date.toISOString().split('T')[0]; // Format yyyy-MM-dd
@@ -152,19 +157,6 @@ export class CalendarComponent {
       (range) => time >= range.start && time < range.end
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   getConsultationColor(type: string): string {
@@ -265,23 +257,24 @@ export class CalendarComponent {
   }
 
 
-  // openSlotDetails(slot: any) {
-  //   if (slot.reserved) {
-  //     this.selectedSlot = slot;
-  //   }
-  // }
+  openSlotDetails(slot: any) {
+    if (slot.reserved) {
+      this.selectedSlot = slot;
+    }
+  }
 
-  // cancelReservation() {
-  //   if (this.selectedSlot) {
-  //     this.selectedSlot.reserved = false;
-  //     this.selectedSlot.details = '';
-  //     this.selectedSlot.type = null;
-  //     this.selectedSlot = null; // Resetuj zaznaczenie po odwołaniu
-  //     console.log('Rezerwacja została odwołana.');
-  //   } else {
-  //     console.error('Nie wybrano żadnej rezerwacji do odwołania.');
-  //   }
-  // }
+  cancelReservation() {
+    if (this.selectedSlot) {
+      this.selectedSlot.reserved = false;
+      this.selectedSlot.details = '';
+      this.selectedSlot.type = null;
+      this.selectedSlot = null; // Resetuj zaznaczenie po odwołaniu
+      this.showBookingForm = false; // Ukrywa formularz   NOWE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      console.log('Rezerwacja została odwołana.');
+    } else {
+      console.error('Nie wybrano żadnej rezerwacji do odwołania.');
+    }
+  }
   
   
   

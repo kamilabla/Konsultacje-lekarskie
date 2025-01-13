@@ -5,9 +5,19 @@
     <button (click)="nextWeek()">Następny tydzień</button>
   </div>
 
+    <!-- Przyciski akcji -->
+    <!-- <div class="actions" *ngIf="selectedSlot">
+      <h3>Wybrana rezerwacja</h3>
+      <p>{{ selectedSlot.details }}</p>
+      <button class="btn" (click)="cancelReservation()">Odwołaj rezerwację</button>
+    </div> -->
+
   <!-- Formularz rezerwacji konsultacji -->
   <div *ngIf="showBookingForm" class="booking-form">
-    <h3>Rezerwacja konsultacji</h3>
+    <!-- <h3>Rezerwacja konsultacji</h3> -->
+    <h3 *ngIf="!selectedSlot?.reserved">Rezerwacja konsultacji</h3>
+    <h3 *ngIf="selectedSlot?.reserved">Szczegóły rezerwacji</h3>
+    
     <div class="form-group">
       <label for="duration">Długość konsultacji (w godzinach):</label>
       <input
@@ -47,7 +57,8 @@
       <label for="notes">Informacje dla lekarza:</label>
       <textarea id="notes" [(ngModel)]="booking.notes"></textarea>
     </div>
-    <button class="btn" (click)="submitBooking()">Zarezerwuj</button>
+    <button *ngIf="!selectedSlot?.reserved" class="btn" (click)="submitBooking()">Zarezerwuj</button>
+    <button *ngIf="selectedSlot?.reserved" class="btn btn-danger" (click)="cancelReservation()">Odwołaj rezerwację</button>
     <button class="btn btn-secondary" (click)="cancelBooking()">Anuluj</button>
   </div>
 
