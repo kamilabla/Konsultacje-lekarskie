@@ -1,5 +1,7 @@
 <div class="calendar">
   <button (click)="testFirebase()">Test Firebase</button>
+  <button (click)="addAvailabilityToFirebase()">Dodaj dostępność</button>
+
 
   <div class="header">
     <button (click)="prevWeek()">Poprzedni tydzień</button>
@@ -112,7 +114,7 @@
               [style.top.px]="tooltipY"
               [style.left.px]="tooltipX"
             >
-              Szczegółyyy: {{ slot.details }}
+              Szczegóły: {{ slot.details }}
             </div>
           </div>
         </div>

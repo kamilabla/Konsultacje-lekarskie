@@ -337,19 +337,6 @@ export class CalendarComponent {
   
 
 
-  // async testFirebase() {
-  //   console.log('Test Firebase uruchomiony');
-  //   try {
-  //     const docRef = await addDoc(collection(this.firestore, 'testCollection'), {
-  //       message: 'Firebase działa!',
-  //       timestamp: new Date(),
-  //     });
-  //     console.log('Dodano dokument z ID:', docRef.id);
-  //   } catch (error) {
-  //     console.error('Błąd podczas dodawania dokumentu:', error);
-  //   }
-  // }
-
   async testFirebase() {
     console.log('Test Firebase uruchomiony');
     try {
@@ -452,6 +439,73 @@ export class CalendarComponent {
     const [hours, minutes] = time.split(':').map(Number);
     return hours + minutes / 60;
   }
+
+
+  async addAvailabilityToFirebase() {
+    if (!this.selectedDate || this.startHour >= this.endHour) {
+      console.error('Nieprawidłowe dane dostępności!');
+      return;
+    }
+  
+    const slots = this.generateSlotsFromRange(
+      this.convertDecimalToTime(this.startHour),
+      this.convertDecimalToTime(this.endHour)
+    );
+  
+    const availability = {
+      doctorId: '12345', // Możesz to dynamicznie przypisać
+      date: new Date(this.selectedDate),
+      startTime: this.convertDecimalToTime(this.startHour),
+      endTime: this.convertDecimalToTime(this.endHour),
+      slots: slots,
+    };
+  
+    try {
+      const availabilityCollection = collection(this.firestore, 'availability');
+      const docRef = await addDoc(availabilityCollection, availability);
+      console.log('Dostępność dodana z ID:', docRef.id);
+    } catch (error) {
+      console.error('Błąd podczas dodawania dostępności:', error);
+    }
+  }
+
+  async fetchAvailabilityFromFirebase() {
+    try {
+      const availabilityCollection = collection(this.firestore, 'availability');
+      const querySnapshot = await getDocs(availabilityCollection);
+  
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        console.log('Dostępność:', data);
+      });
+    } catch (error) {
+      console.error('Błąd podczas pobierania dostępności:', error);
+    }
+  }
+  
+
+  generateSlotsFromRange(startTime: string, endTime: string): any[] {
+    const slots = [];
+    const start = this.convertTimeToDecimal(startTime);
+    const end = this.convertTimeToDecimal(endTime);
+  
+    for (let time = start; time < end; time += 0.5) {
+      const slotTime = this.convertDecimalToTime(time);
+      slots.push({ time: slotTime, reserved: false, details: "" });
+    }
+    return slots;
+  }
+
+  convertDecimalToTime(decimalTime: number): string {
+    const hours = Math.floor(decimalTime); // Całkowita liczba godzin
+    const minutes = (decimalTime % 1) * 60; // Pozostałe minuty
+    const formattedHours = hours.toString().padStart(2, '0'); // Dodanie zera wiodącego
+    const formattedMinutes = minutes.toString().padStart(2, '0'); // Dodanie zera wiodącego
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+  
+  
+  
   
   
   
