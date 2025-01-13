@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Dodaj FormsModule
+import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from '@angular/fire/firestore';
+
 
 
 @Component({
@@ -38,8 +40,9 @@ export class CalendarComponent {
     notes: '',
   };
 
-  constructor() {
+  constructor(private firestore: Firestore) {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
+    this.fetchConsultationsFromFirebase(); // Pobierz dane na starcie
   }
 
 
@@ -104,7 +107,48 @@ export class CalendarComponent {
     this.selectedSlot = null;
   }
 
-  submitBooking() {
+  // submitBooking() {
+  //   if (!this.selectedSlot || !this.booking) {
+  //     console.error('Nie wybrano slotu lub brak danych rezerwacji!');
+  //     return;
+  //   }
+  
+  //   const day = this.days.find((d) => d.slots.includes(this.selectedSlot));
+  
+  //   if (!day) {
+  //     console.error('Nie znaleziono dnia dla wybranego slotu!');
+  //     return;
+  //   }
+  
+  //   // Sprawdź dostępność sąsiednich slotów
+  //   const slotIndex = day.slots.indexOf(this.selectedSlot);
+  //   const slotsToCheck = Math.ceil(this.booking.duration / 0.5);
+  
+  //   for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
+  //     if (
+  //       i >= day.slots.length || // Sprawdzanie końca dnia
+  //       day.slots[i].reserved || // Sprawdzenie czy slot jest już zarezerwowany
+  //       !this.isAvailable(day.date, day.slots[i].time) // Sprawdzenie dostępności
+  //     ) {
+  //       console.error(
+  //         'Nie można zarezerwować, brak ciągłości dostępnych slotów!'
+  //       );
+  //       return;
+  //     }
+  //   }
+  
+  //   // Zarezerwuj sloty
+  //   for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
+  //     day.slots[i].reserved = true;
+  //     day.slots[i].type = this.booking.type;
+  //     day.slots[i].details = `Konsultacja: ${this.booking.type}, ${this.booking.name}`;
+  //   }
+  
+  //   console.log('Konsultacja zarezerwowana!');
+  //   this.cancelBooking(); // Zamknij formularz i wyczyść dane
+  // }
+
+  async submitBooking() {
     if (!this.selectedSlot || !this.booking) {
       console.error('Nie wybrano slotu lub brak danych rezerwacji!');
       return;
@@ -117,33 +161,42 @@ export class CalendarComponent {
       return;
     }
   
-    // Sprawdź dostępność sąsiednich slotów
     const slotIndex = day.slots.indexOf(this.selectedSlot);
     const slotsToCheck = Math.ceil(this.booking.duration / 0.5);
   
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       if (
-        i >= day.slots.length || // Sprawdzanie końca dnia
-        day.slots[i].reserved || // Sprawdzenie czy slot jest już zarezerwowany
-        !this.isAvailable(day.date, day.slots[i].time) // Sprawdzenie dostępności
+        i >= day.slots.length ||
+        day.slots[i].reserved ||
+        !this.isAvailable(day.date, day.slots[i].time)
       ) {
-        console.error(
-          'Nie można zarezerwować, brak ciągłości dostępnych slotów!'
-        );
+        console.error('Nie można zarezerwować, brak ciągłości dostępnych slotów!');
         return;
       }
     }
   
-    // Zarezerwuj sloty
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       day.slots[i].reserved = true;
       day.slots[i].type = this.booking.type;
       day.slots[i].details = `Konsultacja: ${this.booking.type}, ${this.booking.name}`;
     }
   
+    const consultation = {
+      date: day.date,
+      startTime: this.selectedSlot.time,
+      duration: this.booking.duration,
+      type: this.booking.type,
+      name: this.booking.name,
+      gender: this.booking.gender,
+      age: this.booking.age,
+      notes: this.booking.notes,
+    };
+  
+    await this.addConsultationToFirebase(consultation); // Zapis do Firebase
     console.log('Konsultacja zarezerwowana!');
-    this.cancelBooking(); // Zamknij formularz i wyczyść dane
+    this.cancelBooking();
   }
+  
   
 
   isAvailable(date: Date, time: number): boolean {
@@ -264,20 +317,98 @@ export class CalendarComponent {
     }
   }
 
-  cancelReservation() {
+  async cancelReservation() {
     if (this.selectedSlot) {
+      const consultationId = this.selectedSlot.firebaseId; // Załóżmy, że firebaseId jest przypisane do slotu
+      await this.deleteConsultationFromFirebase(consultationId); // Usuń z Firebase
       this.selectedSlot.reserved = false;
       this.selectedSlot.details = '';
       this.selectedSlot.type = null;
-      this.selectedSlot = null; // Resetuj zaznaczenie po odwołaniu
-      this.showBookingForm = false; // Ukrywa formularz   NOWE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      this.selectedSlot = null;
+      this.showBookingForm = false;
       console.log('Rezerwacja została odwołana.');
     } else {
       console.error('Nie wybrano żadnej rezerwacji do odwołania.');
     }
   }
   
+
+
+  // async testFirebase() {
+  //   console.log('Test Firebase uruchomiony');
+  //   try {
+  //     const docRef = await addDoc(collection(this.firestore, 'testCollection'), {
+  //       message: 'Firebase działa!',
+  //       timestamp: new Date(),
+  //     });
+  //     console.log('Dodano dokument z ID:', docRef.id);
+  //   } catch (error) {
+  //     console.error('Błąd podczas dodawania dokumentu:', error);
+  //   }
+  // }
+
+  async testFirebase() {
+    console.log('Test Firebase uruchomiony');
+    try {
+      const testCollection = collection(this.firestore, 'testCollection');
+      const docRef = await addDoc(testCollection, {
+        message: 'Firebase działa!',
+        timestamp: new Date(),
+      });
+      console.log('Dodano dokument z ID:', docRef.id);
+    } catch (error) {
+      console.error('Błąd podczas dodawania dokumentu:', error);
+    }
+  }
   
   
+  
+  
+  
+  async addConsultationToFirebase(consultation: any) {
+    try {
+      const consultationCollection = collection(this.firestore, 'consultations');
+      const docRef = await addDoc(consultationCollection, consultation);
+      console.log('Konsultacja dodana z ID:', docRef.id);
+    } catch (error) {
+      console.error('Błąd podczas dodawania konsultacji:', error);
+    }
+  }
+
+  async fetchConsultationsFromFirebase() {
+    try {
+      const consultationCollection = collection(this.firestore, 'consultations');
+      const querySnapshot = await getDocs(consultationCollection);
+      querySnapshot.forEach((doc) => {
+        console.log(`Dokument ID: ${doc.id}, dane:`, doc.data());
+      });
+    } catch (error) {
+      console.error('Błąd podczas pobierania konsultacji:', error);
+    }
+  }
+
+  async updateConsultationInFirebase(id: string, updatedData: any) {
+    try {
+      const consultationDoc = doc(this.firestore, 'consultations', id);
+      await updateDoc(consultationDoc, updatedData);
+      console.log('Konsultacja zaktualizowana:', id);
+    } catch (error) {
+      console.error('Błąd podczas aktualizacji konsultacji:', error);
+    }
+  }
+
+  async deleteConsultationFromFirebase(id: string) {
+    try {
+      const consultationDoc = doc(this.firestore, 'consultations', id);
+      await deleteDoc(consultationDoc);
+      console.log('Konsultacja usunięta:', id);
+    } catch (error) {
+      console.error('Błąd podczas usuwania konsultacji:', error);
+    }
+  }
+  
+  
+  
+
   
 }
