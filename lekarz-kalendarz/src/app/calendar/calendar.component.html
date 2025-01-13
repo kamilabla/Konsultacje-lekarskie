@@ -1,103 +1,151 @@
 <div class="calendar">
-    <div class="header">
-      <button (click)="prevWeek()">Poprzedni tydzień</button>
-      <div class="current-week">{{ currentWeek }}</div>
-      <button (click)="nextWeek()">Następny tydzień</button>
+  <div class="header">
+    <button (click)="prevWeek()">Poprzedni tydzień</button>
+    <div class="current-week">{{ currentWeek }}</div>
+    <button (click)="nextWeek()">Następny tydzień</button>
+  </div>
+
+  <!-- Formularz rezerwacji konsultacji -->
+  <div *ngIf="showBookingForm" class="booking-form">
+    <h3>Rezerwacja konsultacji</h3>
+    <div class="form-group">
+      <label for="duration">Długość konsultacji (w godzinach):</label>
+      <input
+        id="duration"
+        type="number"
+        [(ngModel)]="booking.duration"
+        min="0.5"
+        step="0.5"
+      />
     </div>
-  
-    <!-- Formularz ustawiania dostępności -->
-    <div class="availability-form">
-      <h3>Ustaw dostępność</h3>
-      <div class="form-group">
-        <label for="date">Data:</label>
-        <input id="date" type="date" [(ngModel)]="selectedDate" />
-      </div>
-      <div class="form-group">
-        <label for="start-hour">Godzina początkowa:</label>
-        <input
-          id="start-hour"
-          type="number"
-          [(ngModel)]="startHour"
-          min="0"
-          max="23"
-        />
-      </div>
-      <div class="form-group">
-        <label for="end-hour">Godzina końcowa:</label>
-        <input
-          id="end-hour"
-          type="number"
-          [(ngModel)]="endHour"
-          min="0"
-          max="23"
-        />
-      </div>
-      <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+    <div class="form-group">
+      <label for="type">Typ konsultacji:</label>
+      <select id="type" [(ngModel)]="booking.type">
+        <option value="pierwsza">Pierwsza wizyta</option>
+        <option value="kontrolna">Wizyta kontrolna</option>
+        <option value="przewlekła">Choroba przewlekła</option>
+        <option value="recepta">Recepta</option>
+      </select>
     </div>
-  
-    <!-- Formularz dodawania nieobecności -->
-    <div class="absence-form">
-      <h3>Dodaj dzień nieobecności</h3>
-      <div class="form-group">
-        <label for="absence-date">Data:</label>
-        <input id="absence-date" type="date" [(ngModel)]="absenceDate" />
-      </div>
-      <button class="btn" (click)="addAbsence(absenceDate)">Dodaj nieobecność</button>
+    <div class="form-group">
+      <label for="name">Imię i nazwisko pacjenta:</label>
+      <input id="name" type="text" [(ngModel)]="booking.name" />
     </div>
-  
-    <div class="content">
-      <div class="hours">
-        <div *ngFor="let hour of hours" class="hour">
-          {{ hour }}
+    <div class="form-group">
+      <label for="gender">Płeć:</label>
+      <select id="gender" [(ngModel)]="booking.gender">
+        <option value="male">Mężczyzna</option>
+        <option value="female">Kobieta</option>
+        <option value="other">Inna</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="age">Wiek:</label>
+      <input id="age" type="number" [(ngModel)]="booking.age" min="0" />
+    </div>
+    <div class="form-group">
+      <label for="notes">Informacje dla lekarza:</label>
+      <textarea id="notes" [(ngModel)]="booking.notes"></textarea>
+    </div>
+    <button class="btn" (click)="submitBooking()">Zarezerwuj</button>
+    <button class="btn btn-secondary" (click)="cancelBooking()">Anuluj</button>
+  </div>
+
+  <!-- Godziny po lewej stronie -->
+  <div class="content">
+    <div class="hours">
+      <div *ngFor="let hour of hours" class="hour">
+        {{ hour }}
+      </div>
+    </div>
+
+    <!-- Dni i sloty -->
+    <div class="days">
+      <div
+        *ngFor="let day of days"
+        class="day"
+        [ngClass]="{ 
+          'today': isToday(day.date),
+          'absent': isAbsent(day.date)
+        }"
+      >
+        <div class="day-header">
+          {{ day.date | date: 'EEEE, d MMMM' }}
+          <span *ngIf="isAbsent(day.date)" class="absence-note">Nieobecność</span>
+          <span *ngIf="!isAbsent(day.date)">{{ day.consultations.length }} wizyt</span>
         </div>
-      </div>
-  
-      <div class="days">
-        <div
-          *ngFor="let day of days"
-          class="day"
-          [ngClass]="{ 
-            'today': isToday(day.date),
-            'absent': isAbsent(day.date)
-          }"
-        >
-          <div class="day-header">
-            {{ day.date | date: 'EEEE, d MMMM' }}
-            <span *ngIf="isAbsent(day.date)" class="absence-note">Nieobecność</span>
-            <span *ngIf="!isAbsent(day.date)">{{ day.consultations.length }} wizyt</span>
-          </div>
-          <div class="slots" *ngIf="!isAbsent(day.date)">
+        <div class="slots" *ngIf="!isAbsent(day.date)">
+          <div
+            *ngFor="let slot of day.slots"
+            class="slot"
+            [ngClass]="{
+              reserved: slot.reserved,
+              past: isPast(day.date, slot.time),
+              current: isCurrent(day.date, slot.time),
+              available: isAvailable(day.date, slot.time)
+            }"
+            [style.background]="slot.reserved 
+              ? getConsultationColor(slot.type) 
+              : isAvailable(day.date, slot.time) 
+              ? 'lightgreen' 
+              : ''"
+            (click)="isAvailable(day.date, slot.time) ? openBookingForm(slot, day) : null"
+            (mouseover)="showDetails(slot, $event)"
+            (mouseout)="hideDetails()"
+          >
+            <span *ngIf="slot.reserved">{{ slot.details }}</span>
+            <span *ngIf="!slot.reserved && isAvailable(day.date, slot.time)">Dostępny</span>
             <div
-              *ngFor="let slot of day.slots"
-              class="slot"
-              [ngClass]="{
-                reserved: slot.reserved,
-                past: isPast(day.date, slot.time),
-                current: isCurrent(day.date, slot.time),
-                available: isAvailable(day.date, slot.time)
-              }"
-              [style.background]="slot.reserved 
-                ? getConsultationColor(slot.type) 
-                : isAvailable(day.date, slot.time) 
-                ? 'lightgreen' 
-                : ''"
-              (mouseover)="showDetails(slot, $event)"
-              (mouseout)="hideDetails()"
+              *ngIf="activeSlot === slot"
+              class="tooltip"
+              [style.top.px]="tooltipY"
+              [style.left.px]="tooltipX"
             >
-              <span *ngIf="slot.reserved">{{ slot.details }}</span>
-              <span *ngIf="!slot.reserved && isAvailable(day.date, slot.time)">Dostępny</span>
-              <div
-                *ngIf="activeSlot === slot"
-                class="tooltip"
-                [style.top.px]="tooltipY"
-                [style.left.px]="tooltipX"
-              >
-                Szczegóły: {{ slot.details }}
-              </div>
+              Szczegóły: {{ slot.details }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- Formularz ustawiania dostępności -->
+  <div class="availability-form">
+    <h3>Ustaw dostępność</h3>
+    <div class="form-group">
+      <label for="date">Data:</label>
+      <input id="date" type="date" [(ngModel)]="selectedDate" />
+    </div>
+    <div class="form-group">
+      <label for="start-hour">Godzina początkowa:</label>
+      <input
+        id="start-hour"
+        type="number"
+        [(ngModel)]="startHour"
+        min="0"
+        max="23"
+      />
+    </div>
+    <div class="form-group">
+      <label for="end-hour">Godzina końcowa:</label>
+      <input
+        id="end-hour"
+        type="number"
+        [(ngModel)]="endHour"
+        min="0"
+        max="23"
+      />
+    </div>
+    <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+  </div>
+
+  <!-- Formularz dodawania nieobecności -->
+  <div class="absence-form">
+    <h3>Dodaj dzień nieobecności</h3>
+    <div class="form-group">
+      <label for="absence-date">Data:</label>
+      <input id="absence-date" type="date" [(ngModel)]="absenceDate" />
+    </div>
+    <button class="btn" (click)="addAbsence(absenceDate)">Dodaj nieobecność</button>
+  </div>
+</div>

@@ -29,6 +29,8 @@
     grid-template-rows: repeat(12, 1fr);
     gap: 0.5rem;
   }
+
+
   
 
   
@@ -42,14 +44,14 @@
   }
   
   .slot.current {
-    border: 2px solid red;
+    border: 2px solid rgb(122, 164, 216);
   }
   
   .today {
-    border: 2px solid red;
+    border: 2px solid rgb(129, 156, 224);
     border-radius: 8px;
     padding: 0.5rem;
-    background-color: #fffbe6; /* Opcjonalne delikatne podświetlenie */
+    background-color: #b6d7f8; /* Opcjonalne delikatne podświetlenie */
   }
 
   .content {
@@ -84,15 +86,24 @@
     flex-direction: column;
   }
 
+
   .slot {
     position: relative;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.85rem; /* Stały rozmiar czcionki */
     color: black; /* Tekst zawsze widoczny */
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid #97b3e8;
     border-radius: 4px;
+  
+    width: 100%; /* Szerokość dopasowana do kontenera */
+    height: 3rem; /* Stała wysokość slotu */
+    display: flex; /* Ustawienie tekstu w środku */
+    justify-content: center; /* Wyśrodkowanie w poziomie */
+    align-items: center; /* Wyśrodkowanie w pionie */
+    box-sizing: border-box; /* Upewnienie się, że padding nie wpływa na rozmiar */
   }
+  
   
   .tooltip {
     position: absolute;
@@ -190,10 +201,99 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 400px;
   }
+
+  .booking-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 300px; /* Zmniejszenie szerokości */
+    font-size: 0.9rem; /* Zmniejszenie rozmiaru czcionki */
+  }
   
+  .booking-form .form-group {
+    margin-bottom: 0.75rem; /* Mniejsze odstępy między polami */
+  }
   
+  .booking-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
   
+  .booking-form input,
+  .booking-form select,
+  .booking-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.2rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.85rem; /* Zmniejszenie czcionki w polach */
+  }
   
+  .booking-form button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
   
+  .booking-form .btn-secondary {
+    background-color: #ccc;
+    color: black;
+  }
+  
+  .booking-form .btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .booking-form .btn:hover {
+    background-color: #0056b3;
+  }
+  
+
+
+
+
+
+
+  
+  .booking-form h3 {
+    font-size: 1.2rem; /* Mniejszy nagłówek */
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  
+  .booking-form .form-group label {
+    font-size: 0.85rem; /* Zmniejszenie czcionki etykiet */
+    margin-bottom: 0.25rem;
+  }
+
+  
+  .booking-form .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem; /* Zmniejszenie rozmiaru przycisków */
+    width: 100%;
+  }
+  
+  .booking-form .btn-secondary {
+    background-color: #ddd;
+    color: #333;
+    margin-top: 0.5rem;
+  }
+  
+  .booking-form .btn:hover {
+    background-color: #b662c7;
+  }
   
   
