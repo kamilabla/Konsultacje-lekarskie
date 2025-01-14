@@ -242,13 +242,47 @@ export class CalendarComponent {
     this.activeSlot = null; // Ukrycie szczegółów wizyty
   }
 
-  prevWeek() {
-    console.log('Poprzedni tydzień');
-  }
 
   nextWeek() {
-    console.log('Następny tydzień');
+    const firstDayOfNextWeek = new Date(this.days[0].date);
+    firstDayOfNextWeek.setDate(firstDayOfNextWeek.getDate() + 7); // Przesunięcie o 7 dni do przodu
+
+    this.days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(firstDayOfNextWeek);
+      date.setDate(firstDayOfNextWeek.getDate() + i);
+      this.days.push({
+        date,
+        consultations: [],
+        slots: this.generateSlots(date),
+      });
+    }
+
+    this.fetchConsultationsFromFirebase(); // Pobierz konsultacje dla nowego zakresu
+    this.fetchAvailabilityFromFirebase(); // Pobierz dostępność dla nowego zakresu
+    console.log('Następny tydzień:', this.days);
   }
+
+  prevWeek() {
+    const firstDayOfPrevWeek = new Date(this.days[0].date);
+    firstDayOfPrevWeek.setDate(firstDayOfPrevWeek.getDate() - 7); // Przesunięcie o 7 dni do tyłu
+
+    this.days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(firstDayOfPrevWeek);
+      date.setDate(firstDayOfPrevWeek.getDate() + i);
+      this.days.push({
+        date,
+        consultations: [],
+        slots: this.generateSlots(date),
+      });
+    }
+
+    this.fetchConsultationsFromFirebase(); // Pobierz konsultacje dla nowego zakresu
+    this.fetchAvailabilityFromFirebase(); // Pobierz dostępność dla nowego zakresu
+    console.log('Poprzedni tydzień:', this.days);
+  }
+
 
 
 
