@@ -1,11 +1,25 @@
-<!-- <app-calendar></app-calendar> -->
 
 
-<nav>
+<!-- <nav>
     <a *ngIf="!(user$ | async)" routerLink="/register">Rejestracja</a>
     <a *ngIf="!(user$ | async)" routerLink="/login">Logowanie</a>
     <a *ngIf="user$ | async" (click)="logout()">Wylogowanie</a>
     <span *ngIf="user$ | async as user">Zalogowany jako: {{ user.email }}</span>
+  </nav>
+  
+  <router-outlet></router-outlet>
+   -->
+
+
+   <nav>
+    <div class="menu">
+      <a *ngIf="!(user$ | async)" routerLink="/register" class="nav-link">Rejestracja</a>
+      <a *ngIf="!(user$ | async)" routerLink="/login" class="nav-link">Logowanie</a>
+      <a *ngIf="user$ | async" (click)="logout()" class="nav-link">Wylogowanie</a>
+      <span *ngIf="user$ | async as user" class="user-info">
+        Zalogowany jako: <strong>{{ user.email }}</strong>
+      </span>
+    </div>
   </nav>
   
   <router-outlet></router-outlet>

@@ -1,0 +1,59 @@
+/* Stylizacja nawigacji */
+nav {
+    background-color: #47a0d0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  nav .menu {
+    display: flex;
+    gap: 15px;
+  }
+  
+  nav .nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  nav .nav-link:hover {
+    color: #d1eaff;
+  }
+  
+  nav .user-info {
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  nav .user-info strong {
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  /* Responsywność */
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    nav .menu {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    nav .nav-link {
+      font-size: 14px;
+    }
+  
+    nav .user-info {
+      font-size: 12px;
+    }
+  }
+  
