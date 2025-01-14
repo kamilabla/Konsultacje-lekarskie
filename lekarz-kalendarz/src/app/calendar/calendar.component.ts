@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Dodaj FormsModule
 import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from '@angular/fire/firestore';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 
 
@@ -40,7 +42,7 @@ export class CalendarComponent {
     notes: '',
   };
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore,  private cdr: ChangeDetectorRef) {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
     this.fetchConsultationsFromFirebase(); // Pobierz dane na starcie
     this.fetchAvailabilityFromFirebase(); // Pobranie dostępności
@@ -332,6 +334,7 @@ export class CalendarComponent {
       console.error('Błąd podczas dodawania konsultacji:', error);
     }
   }
+
   async fetchConsultationsFromFirebase() {
     try {
       const consultationCollection = collection(this.firestore, 'consultations');
@@ -454,16 +457,26 @@ export class CalendarComponent {
           if (day) {
             // Aktualizacja slotów na podstawie dostępności z Firebase
             const slotsFromFirebase = data['slots'] || [];
+            console.log('Sloty z Firebase:', slotsFromFirebase);
+
             day.slots.forEach((slot) => {
               const matchingSlot = slotsFromFirebase.find(
                 (firebaseSlot: any) => firebaseSlot.time === slot.time
               );
               if (matchingSlot) {
+                console.log('Przypisywanie slotu:', matchingSlot);
                 slot.reserved = matchingSlot.reserved;
                 slot.details = matchingSlot.details || '';
               }
             });
           }
+          if (!day) {
+            console.error('Nie znaleziono dnia w kalendarzu dla dostępności:', data);
+            return;
+          }
+
+          console.log('Pobrana dostępność:', data);
+          this.cdr.detectChanges(); // Wymuszenie odświeżenia interfejsu
         } else {
           console.error(
             `Pole "date" jest niepoprawne w dokumencie ${doc.id}:`,
