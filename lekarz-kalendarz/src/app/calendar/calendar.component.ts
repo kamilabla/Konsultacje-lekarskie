@@ -80,6 +80,7 @@ export class CalendarComponent {
         name: '',   // Nowe pole
         gender: '', // Nowe pole
         age: null,  // Nowe pole
+        firebaseId: '', // Dodano pole firebaseId
       });
     }
     return slots;
@@ -121,7 +122,6 @@ export class CalendarComponent {
     }
   
     const day = this.days.find((d) => d.slots.includes(this.selectedSlot));
-  
     if (!day) {
       console.error('Nie znaleziono dnia dla wybranego slotu!');
       return;
@@ -130,6 +130,7 @@ export class CalendarComponent {
     const slotIndex = day.slots.indexOf(this.selectedSlot);
     const slotsToCheck = Math.ceil(this.booking.duration / 0.5);
   
+    // Sprawdzenie ciągłości slotów
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       if (
         i >= day.slots.length ||
@@ -141,6 +142,7 @@ export class CalendarComponent {
       }
     }
   
+    // Aktualizacja slotów jako zarezerwowane
     for (let i = slotIndex; i < slotIndex + slotsToCheck; i++) {
       day.slots[i].reserved = true;
       day.slots[i].type = this.booking.type;
@@ -149,7 +151,7 @@ export class CalendarComponent {
   
     const consultation = {
       date: day.date,
-      startTime: this.selectedSlot.time, // Przekazujemy time jako string
+      startTime: this.selectedSlot.time,
       duration: this.booking.duration,
       type: this.booking.type,
       name: this.booking.name,
@@ -158,10 +160,24 @@ export class CalendarComponent {
       notes: this.booking.notes,
     };
   
-    await this.addConsultationToFirebase(consultation); // Zapis do Firebase
-    console.log('Konsultacja zarezerwowana!');
-    this.cancelBooking();
+    try {
+      // Dodanie rezerwacji do Firebase
+      const consultationCollection = collection(this.firestore, 'consultations');
+      const docRef = await addDoc(consultationCollection, consultation);
+      console.log('Konsultacja zarezerwowana z ID:', docRef.id);
+  
+      // Przypisanie firebaseId do slotu
+      this.selectedSlot.firebaseId = docRef.id;
+  
+      // Zamknięcie formularza i zresetowanie stanu
+      this.cancelBooking();
+      console.log('Formularz zamknięty po dodaniu rezerwacji.');
+    } catch (error) {
+      console.error('Błąd podczas dodawania konsultacji:', error);
+    }
   }
+  
+  
   
 
   
@@ -290,20 +306,59 @@ export class CalendarComponent {
     }
   }
 
+  // async cancelReservation() {
+  //   if (this.selectedSlot) {
+  //     const consultationId = this.selectedSlot.firebaseId; // Załóżmy, że firebaseId jest przypisane do slotu
+  //     await this.deleteConsultationFromFirebase(consultationId); // Usuń z Firebase
+  //     this.selectedSlot.reserved = false;
+  //     this.selectedSlot.details = '';
+  //     this.selectedSlot.type = null;
+  //     this.selectedSlot = null;
+  //     this.showBookingForm = false;
+  //     console.log('Rezerwacja została odwołana.');
+  //   } else {
+  //     console.error('Nie wybrano żadnej rezerwacji do odwołania.');
+  //   }
+  // }
+
   async cancelReservation() {
-    if (this.selectedSlot) {
-      const consultationId = this.selectedSlot.firebaseId; // Załóżmy, że firebaseId jest przypisane do slotu
-      await this.deleteConsultationFromFirebase(consultationId); // Usuń z Firebase
+    if (!this.selectedSlot) {
+      console.error('Nie wybrano żadnej rezerwacji do odwołania.');
+      return;
+    }
+  
+    const consultationId = this.selectedSlot.firebaseId;
+    if (!consultationId) {
+      console.error('Nie można odwołać rezerwacji - brak identyfikatora w Firebase.');
+      return;
+    }
+  
+    try {
+      // Usuń konsultację z Firebase
+      await this.deleteConsultationFromFirebase(consultationId);
+      console.log(`Rezerwacja o ID ${consultationId} została usunięta z Firebase.`);
+  
+      // Zaktualizuj stan lokalny aplikacji
       this.selectedSlot.reserved = false;
       this.selectedSlot.details = '';
-      this.selectedSlot.type = null;
+      this.selectedSlot.type = '';
+      this.selectedSlot.name = '';
+      this.selectedSlot.gender = '';
+      this.selectedSlot.age = null;
+      this.selectedSlot.firebaseId = null; // Wyzeruj identyfikator Firebase
+  
+      // Resetuj formularz i wybrany slot
       this.selectedSlot = null;
       this.showBookingForm = false;
-      console.log('Rezerwacja została odwołana.');
-    } else {
-      console.error('Nie wybrano żadnej rezerwacji do odwołania.');
+  
+      console.log('Rezerwacja została pomyślnie odwołana.');
+    } catch (error) {
+      console.error('Wystąpił błąd podczas odwoływania rezerwacji:', error);
     }
   }
+  
+
+  
   
 
 
@@ -342,6 +397,7 @@ export class CalendarComponent {
   
       querySnapshot.forEach((doc) => {
         const data = doc.data();
+        const firebaseId = doc.id; // Pobierz ID dokumentu
   
         if (data['date'] && data['date'].toDate) {
           const consultationDate = data['date'].toDate(); // Konwersja Timestamp na Date
@@ -353,17 +409,18 @@ export class CalendarComponent {
   
           if (day) {
             // Przypisanie do odpowiedniego slotu
-            const slotIndex = day.slots.findIndex(
-              (slot) => slot.time === data['startTime'] // Porównanie z użyciem string
+            const slot = day.slots.find(
+              (s) => s.time === data['startTime'] // Porównanie czasów jako string
             );
   
-            if (slotIndex !== -1) {
-              day.slots[slotIndex].reserved = true;
-              day.slots[slotIndex].type = data['type'];
-              day.slots[slotIndex].details = data['notes'];
-              day.slots[slotIndex]['name'] = data['name'];
-              day.slots[slotIndex]['gender'] = data['gender'];
-              day.slots[slotIndex]['age'] = data['age'];
+            if (slot) {
+              slot.reserved = true;
+              slot.type = data['type'];
+              slot.details = data['notes'];
+              slot.name = data['name'];
+              slot.gender = data['gender'];
+              slot.age = data['age'];
+              slot.firebaseId = firebaseId; // Przypisz firebaseId do slotu
             }
           }
         } else {
@@ -373,10 +430,13 @@ export class CalendarComponent {
           );
         }
       });
+  
+      console.log('Konsultacje załadowane z Firebase.');
     } catch (error) {
       console.error('Błąd podczas pobierania konsultacji:', error);
     }
   }
+  
   
   async updateConsultationInFirebase(id: string, updatedData: any) {
     try {
