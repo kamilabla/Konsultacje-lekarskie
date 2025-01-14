@@ -40,7 +40,7 @@
   }
   
   .slot.past {
-    background: #f0f0f0;
+    background: #a9c6f5b4;
   }
   
   .slot.current {
@@ -119,7 +119,7 @@
   }
 
   .slot.available {
-    background-color: lightgreen;
+    background-color: rgb(173, 239, 173);
     color: black;
     font-weight: bold;
   }
@@ -184,13 +184,15 @@
   }
   
   .day.absent {
-    background-color: #ffcccc; /* Czerwone tło dla nieobecności */
-    color: #900; /* Ciemniejszy czerwony dla tekstu */
+    border: 2px solid rgba(14, 6, 9, 0.062);
+    border-radius: 8px;
+    padding: 0.5rem;
+    background-color: #a09d9d; /* Opcjonalne delikatne podświetlenie */
   }
   
   .absence-note {
     font-weight: bold;
-    color: #900;
+    color: rgb(155, 68, 68);
   }
   
   .absence-form {
