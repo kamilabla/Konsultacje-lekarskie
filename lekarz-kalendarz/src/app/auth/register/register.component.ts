@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [NgIf, FormsModule], // Dodajemy CommonModule i FormsModule
 })
 export class RegisterComponent {
   email: string = '';

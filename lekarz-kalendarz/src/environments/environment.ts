@@ -12,13 +12,16 @@ export const environment = {
       apiKey: "AIzaSyC4scfs8QeQx6PcDj2Bha7eYAx3R6tl72A",
       authDomain: "kalendarz-lekarski-c55f1.firebaseapp.com",
       projectId: "kalendarz-lekarski-c55f1",
-      storageBucket: "kalendarz-lekarski-c55f1.appspot.com",
+      storageBucket: "kalendarz-lekarski-c55f1.firebasestorage.app",
       messagingSenderId: "5821944786",
       appId: "1:5821944786:web:e3beb6c613debdd3b0ae0b",
       measurementId: "G-FPBDFZ3MW1"
     },
   };
   
+
+  // storageBucket: "kalendarz-lekarski-c55f1.appspot.com",   to było tutaj!
+
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
