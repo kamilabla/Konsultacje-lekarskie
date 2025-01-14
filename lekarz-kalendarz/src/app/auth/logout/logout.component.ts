@@ -1,17 +1,26 @@
 import { Component } from '@angular/core';
-import { Auth, signOut } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-logout',
-  standalone: true,
+  selector: 'app-root',
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.css'],
 })
 export class LogoutComponent {
-  constructor(private auth: Auth) {}
+  user$: Observable<any>;
+
+  constructor(private afAuth: AngularFireAuth, private router: Router) {
+    this.user$ = this.afAuth.authState;
+    this.logout();
+  }
 
   async logout() {
-    await signOut(this.auth);
-    alert('Wylogowanie zakończone sukcesem!');
+    this.router.navigate(['/login']); // Automatyczne przeniesienie do logowania
+    await this.afAuth.signOut();
   }
 }
+
+
+
