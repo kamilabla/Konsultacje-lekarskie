@@ -1,1 +1,12 @@
-<app-calendar></app-calendar>
+<!-- <app-calendar></app-calendar> -->
+
+
+<nav>
+    <a *ngIf="!(user$ | async)" routerLink="/register">Rejestracja</a>
+    <a *ngIf="!(user$ | async)" routerLink="/login">Logowanie</a>
+    <a *ngIf="user$ | async" (click)="logout()">Wylogowanie</a>
+    <span *ngIf="user$ | async as user">Zalogowany jako: {{ user.email }}</span>
+  </nav>
+  
+  <router-outlet></router-outlet>
+  

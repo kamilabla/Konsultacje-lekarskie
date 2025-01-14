@@ -1,0 +1,10 @@
+<form (ngSubmit)="register()">
+  <label for="email">Email:</label>
+  <input type="email" id="email" [(ngModel)]="email" required />
+
+  <label for="password">Hasło:</label>
+  <input type="password" id="password" [(ngModel)]="password" required />
+
+  <button type="submit">Zarejestruj</button>
+  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+</form>
