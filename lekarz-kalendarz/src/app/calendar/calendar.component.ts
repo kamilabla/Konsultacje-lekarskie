@@ -41,6 +41,12 @@ export class CalendarComponent {
     age: 0,
     notes: '',
   };
+  cart: { date: string; time: string; details: string }[] = []; // Cart array
+  showCart: boolean = false;
+
+
+
+
 
   constructor(private firestore: Firestore,  private cdr: ChangeDetectorRef) {
     this.generateHours(); // Wygenerowanie godzin podczas inicjalizacji
@@ -165,6 +171,13 @@ export class CalendarComponent {
       const consultationCollection = collection(this.firestore, 'consultations');
       const docRef = await addDoc(consultationCollection, consultation);
       console.log('Konsultacja zarezerwowana z ID:', docRef.id);
+
+      // Add to cart
+      this.cart.push({
+      date: day.date.toISOString().split('T')[0], // Format Date to 'YYYY-MM-DD'
+      time: consultation.startTime,
+      details: consultation.notes || 'Brak dodatkowych informacji',
+      });
   
       // Przypisanie firebaseId do slotu
       this.selectedSlot.firebaseId = docRef.id;
@@ -340,20 +353,7 @@ export class CalendarComponent {
     }
   }
 
-  // async cancelReservation() {
-  //   if (this.selectedSlot) {
-  //     const consultationId = this.selectedSlot.firebaseId; // Załóżmy, że firebaseId jest przypisane do slotu
-  //     await this.deleteConsultationFromFirebase(consultationId); // Usuń z Firebase
-  //     this.selectedSlot.reserved = false;
-  //     this.selectedSlot.details = '';
-  //     this.selectedSlot.type = null;
-  //     this.selectedSlot = null;
-  //     this.showBookingForm = false;
-  //     console.log('Rezerwacja została odwołana.');
-  //   } else {
-  //     console.error('Nie wybrano żadnej rezerwacji do odwołania.');
-  //   }
-  // }
+
 
   async cancelReservation() {
     if (!this.selectedSlot) {
@@ -607,6 +607,14 @@ export class CalendarComponent {
     return `${formattedHours}:${formattedMinutes}`;
   }
   
+  clearCart() {
+    this.cart = [];
+    console.log('Koszyk wyczyszczony');
+  }
+  
+  toggleCart(): void {
+    this.showCart = !this.showCart;
+  }
   
   
   

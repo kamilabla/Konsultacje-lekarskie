@@ -11,6 +11,20 @@
   </div>
 
 
+
+<button class="cart-button" (click)="toggleCart()">Koszyk</button>
+<div *ngIf="showCart" class="cart">
+  <h3>Zawartość koszyka</h3>
+  <ul>
+    <li *ngFor="let appointment of cart">
+      Data: {{ appointment.date }}, Godzina: {{ appointment.time }}, Szczegóły: {{ appointment.details }}
+    </li>
+  </ul>
+</div>
+
+  
+
+
   <!-- Formularz rezerwacji konsultacji -->
   <div *ngIf="showBookingForm" class="booking-form">
     <!-- <h3>Rezerwacja konsultacji</h3> -->
