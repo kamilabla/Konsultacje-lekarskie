@@ -1,14 +1,22 @@
-.calendar {
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap'); 
+ 
+  .calendar {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    
+
+
   }
-  
-  .header {
+
+  /* .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+  } */
   
   .days {
     display: flex;
@@ -382,7 +390,7 @@
 
 
   .cart-button {
-    background-color: #4CAF50; /* Green background */
+    background-color: #77c37a; /* Green background */
     color: white; /* White text */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -390,11 +398,18 @@
     font-size: 16px; /* Font size */
     cursor: pointer; /* Pointer cursor on hover */
     display: inline-block; /* Makes it a normal button size */
-    width: auto; /* Prevents full width */
+    
+    width: auto; 
     transition: background-color 0.3s ease; /* Smooth hover effect */
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
   }
+
   .cart-button:hover {
     background-color: #45a049; /* Slightly darker green on hover */
+    transform: scale(1.05);
+
   }
   
   .cart-button:active {
@@ -402,6 +417,67 @@
   }
   
   
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #ffffff; /* Light background for the header */
+    border: 1px solid #d575de; /* Subtle border */
+    border-radius: 5px;
+    margin-bottom: 20px; /* Space below the header */
+    font-size: x-large;
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    
+  }
   
-  
-  
+    
+  .header button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #72c8f0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    
+
+  }
+
+  .header button:hover {
+    background-color: #4a97bb;
+    transform: scale(1.05);
+  }
+
+  .header button:active {
+    background-color: #3b6e9d;
+  }
+
+  .availability-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #72c8f0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+
+  .availability-button:hover {
+    background-color: #4a97bb;
+    transform: scale(1.05);
+  }
+
+  .availability-button:active {
+    background-color: #3b6e9d;
+  }

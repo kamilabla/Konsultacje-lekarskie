@@ -1,0 +1,14 @@
+<h1>Admin Panel</h1>
+
+<div>
+  <h2>Set Persistence</h2>
+  <button (click)="setPersistence('local')">Local</button>
+  <button (click)="setPersistence('session')">Session</button>
+  <button (click)="setPersistence('none')">None</button>
+</div>
+
+<div>
+  <h2>Ban Users</h2>
+  <input type="text" #email placeholder="Enter email to ban" />
+  <button (click)="banUser(email.value)">Ban User</button>
+</div>

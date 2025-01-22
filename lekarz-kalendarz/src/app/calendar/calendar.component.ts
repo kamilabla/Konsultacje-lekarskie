@@ -373,6 +373,33 @@ export class CalendarComponent {
       console.log(`Rezerwacja o ID ${consultationId} została usunięta z Firebase.`);
   
       // Zaktualizuj stan lokalny aplikacji
+      const appointment = this.cart.find((item) => {
+        const appointmentDate = this.parseDate(item.date); // Convert string to Date if necessary
+        const selectedDate = this.parseDate(this.selectedSlot.date);
+
+
+        console.log('Item Date:', item.date);
+        console.log('Parsed Item Date:', appointmentDate);
+        console.log('Selected Slot Date:', this.selectedSlot.date);
+        console.log('Parsed Selected Slot Date:', selectedDate);
+
+  
+        if (!appointmentDate || !selectedDate) {
+          console.error('Nieprawidłowa wartość daty w koszyku lub w wybranym slocie.');
+          return false;
+        }
+  
+        return (
+          appointmentDate.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0] &&
+          item.time === this.selectedSlot.time &&
+          item.details === this.selectedSlot.details
+        );
+      });
+  
+      if (appointment) {
+        this.removeFromCart(appointment); // Usuń z koszyka
+      }
+  
       this.selectedSlot.reserved = false;
       this.selectedSlot.details = '';
       this.selectedSlot.type = '';
@@ -390,6 +417,17 @@ export class CalendarComponent {
       console.error('Wystąpił błąd podczas odwoływania rezerwacji:', error);
     }
   }
+  
+  private parseDate(date: string | Date): Date | null {
+    if (typeof date === 'string') {
+      const parsedDate = new Date(date);
+      return isNaN(parsedDate.getTime()) ? null : parsedDate; // Check if the date is valid
+    }
+    return date instanceof Date ? date : null;
+  }
+  
+  
+  
   
 
   
@@ -615,6 +653,11 @@ export class CalendarComponent {
   toggleCart(): void {
     this.showCart = !this.showCart;
   }
+
+  removeFromCart(appointment: any): void {
+    this.cart = this.cart.filter(item => item !== appointment);
+  }
+  
   
   
   

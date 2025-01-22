@@ -1,0 +1,18 @@
+<div class="persistence-panel">
+  <h3>Set Authentication Persistence</h3>
+  <label for="persistence">Choose Persistence:</label>
+  <select
+    id="persistence"
+    [(ngModel)]="selectedPersistence"
+    class="persistence-select"
+  >
+    <option *ngFor="let option of persistenceOptions" [value]="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+  <button (click)="updatePersistence()" class="update-button">
+    Update Persistence
+  </button>
+
+  <p *ngIf="message" class="message">{{ message }}</p>
+</div>

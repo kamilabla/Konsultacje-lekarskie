@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap'); 
+
+
 form {
     max-width: 400px;
     margin: 50px auto;
@@ -6,6 +9,9 @@ form {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
   }
   
   form label {

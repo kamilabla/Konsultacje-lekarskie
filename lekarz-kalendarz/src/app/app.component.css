@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap'); 
+
+
 /* Stylizacja nawigacji */
 nav {
     background-color: #47a0d0;
@@ -7,6 +10,9 @@ nav {
     align-items: center;
     color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: "Lexend", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
   }
   
   nav .menu {
