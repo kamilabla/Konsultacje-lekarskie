@@ -72,6 +72,7 @@
     flex-direction: column;
     align-items: center;
     padding-right: 1rem;
+    margin-top: 47px;
   }
   
   .hour {
@@ -81,6 +82,7 @@
     align-items: center;
     font-size: 0.9rem;
     color: #555;
+    margin-bottom: 24px;
   }
   
   .days {
@@ -146,7 +148,7 @@
   .availability-form h3 {
     margin-bottom: 1rem;
     font-size: 1.25rem;
-    color: #333;
+    color: #000000;
     text-align: center;
   }
   
@@ -205,11 +207,18 @@
   
   .absence-form {
     background-color: #f9f9f9;
-    padding: 1rem;
+    padding: 1.5rem;
     margin: 1rem 0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 400px;
+  }
+
+  .absence-form h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: #000000;
+    text-align: center;
   }
 
   .booking-form {
@@ -423,8 +432,8 @@
     justify-content: space-between;
     padding: 10px 20px;
     background-color: #ffffff; /* Light background for the header */
-    border: 1px solid #d575de; /* Subtle border */
-    border-radius: 5px;
+    border: 1px solid #d8aedc; 
+    /* border-radius: 5px; */
     margin-bottom: 20px; /* Space below the header */
     font-size: x-large;
     font-family: "Lexend", serif;
