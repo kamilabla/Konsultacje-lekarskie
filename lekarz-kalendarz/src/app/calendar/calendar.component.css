@@ -280,11 +280,6 @@
   }
   
 
-
-
-
-
-
   
   .booking-form h3 {
     font-size: 1.2rem; /* Mniejszy nagłówek */
@@ -399,7 +394,7 @@
 
 
   .cart-button {
-    background-color: #77c37a; /* Green background */
+    background-color: #ce9de8; /* Green background */
     color: white; /* White text */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -416,13 +411,13 @@
   }
 
   .cart-button:hover {
-    background-color: #45a049; /* Slightly darker green on hover */
+    background-color: #b662c7; /* Slightly darker green on hover */
     transform: scale(1.05);
 
   }
   
   .cart-button:active {
-    background-color: #3e8e41; /* Darker green when clicked */
+    background-color: #b662c7; /* Darker green when clicked */
   }
   
   
@@ -432,7 +427,7 @@
     justify-content: space-between;
     padding: 10px 20px;
     background-color: #ffffff; /* Light background for the header */
-    border: 1px solid #d8aedc; 
+    border: 1px solid #ffffff; 
     /* border-radius: 5px; */
     margin-bottom: 20px; /* Space below the header */
     font-size: x-large;
@@ -489,4 +484,11 @@
 
   .availability-button:active {
     background-color: #3b6e9d;
+  }
+
+  .forms-container {
+    display: flex;
+    gap: 20px; /* Odstęp między formularzami */
+    justify-content: space-around; /* Opcjonalnie: rozmieszczenie formularzy z odstępami */
+    align-items: flex-start; /* Dopasowanie do górnej krawędzi */
   }

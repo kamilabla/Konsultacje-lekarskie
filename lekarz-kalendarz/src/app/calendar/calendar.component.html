@@ -135,48 +135,48 @@
     </div>
   </div>
 
-  <button class="availability-button"(click)="addAvailabilityToFirebase()">Dodaj dostępność</button>
+  <button class="availability-button"(click)="addAvailabilityToFirebase()">Dodaj dostępność do bazy danych</button>
 
-  <!-- <div class="forms-container">
+  <div class="forms-container">
+    <!-- Formularz ustawiania dostępności -->
+    <div class="availability-form">
+      <h3>Ustaw dostępność</h3>
+      <div class="form-group">
+        <label for="date">Data:</label>
+        <input id="date" type="date" [(ngModel)]="selectedDate" />
+      </div>
+      <div class="form-group">
+        <label for="start-hour">Godzina początkowa:</label>
+        <input
+          id="start-hour"
+          type="number"
+          [(ngModel)]="startHour"
+          min="0"
+          max="23"
+        />
+      </div>
+      <div class="form-group">
+        <label for="end-hour">Godzina końcowa:</label>
+        <input
+          id="end-hour"
+          type="number"
+          [(ngModel)]="endHour"
+          min="0"
+          max="23"
+        />
+      </div>
+      <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
+    </div>
 
-  </div> -->
-  <!-- Formularz ustawiania dostępności -->
-  <div class="availability-form">
-    <h3>Ustaw dostępność</h3>
-    <div class="form-group">
-      <label for="date">Data:</label>
-      <input id="date" type="date" [(ngModel)]="selectedDate" />
+    <!-- Formularz dodawania nieobecności -->
+    <div class="absence-form">
+      <h3>Dodaj dzień nieobecności</h3>
+      <div class="form-group">
+        <label for="absence-date">Data:</label>
+        <input id="absence-date" type="date" [(ngModel)]="absenceDate" />
+      </div>
+      <button class="btn" (click)="addAbsence(absenceDate)">Dodaj nieobecność</button>
     </div>
-    <div class="form-group">
-      <label for="start-hour">Godzina początkowa:</label>
-      <input
-        id="start-hour"
-        type="number"
-        [(ngModel)]="startHour"
-        min="0"
-        max="23"
-      />
-    </div>
-    <div class="form-group">
-      <label for="end-hour">Godzina końcowa:</label>
-      <input
-        id="end-hour"
-        type="number"
-        [(ngModel)]="endHour"
-        min="0"
-        max="23"
-      />
-    </div>
-    <button class="btn" (click)="addAvailability()">Dodaj dostępność</button>
   </div>
-
-  <!-- Formularz dodawania nieobecności -->
-  <div class="absence-form">
-    <h3>Dodaj dzień nieobecności</h3>
-    <div class="form-group">
-      <label for="absence-date">Data:</label>
-      <input id="absence-date" type="date" [(ngModel)]="absenceDate" />
-    </div>
-    <button class="btn" (click)="addAbsence(absenceDate)">Dodaj nieobecność</button>
-  </div>
+  
 </div>
