@@ -195,15 +195,15 @@
   }
   
   .day.absent {
-    border: 2px solid rgba(14, 6, 9, 0.062);
+    border: 2px solid #b662c7(129, 156, 224);
     border-radius: 8px;
     padding: 0.5rem;
-    background-color: #a09d9d; /* Opcjonalne delikatne podświetlenie */
+    background-color: #ce9de8; /* Opcjonalne delikatne podświetlenie */
   }
   
   .absence-note {
     font-weight: bold;
-    color: rgb(155, 68, 68);
+    color: rgb(0, 0, 0);
   }
   
   .absence-form {
@@ -371,7 +371,7 @@
   .cart {
     margin: 20px 0;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #fffafa;
     border-radius: 4px;
     background: #f9f9f9;
   }
@@ -393,34 +393,33 @@
     margin-top: 10px;
   }
 
-
+/* 
   .cart-button {
-    background-color: #ce9de8; /* Green background */
-    color: white; /* White text */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 20px; /* Padding for button size */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    display: inline-block; /* Makes it a normal button size */
-    
+    background-color: #ce9de8;
+    color: white; 
+    border: none;
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    display: inline-block;     
     width: auto; 
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    transition: background-color 0.3s ease; 
     font-family: "Lexend", serif;
     font-optical-sizing: auto;
     font-style: normal;
   }
 
   .cart-button:hover {
-    background-color: #b662c7; /* Slightly darker green on hover */
+    background-color: #b662c7; 
     transform: scale(1.05);
 
   }
   
   .cart-button:active {
-    background-color: #b662c7; /* Darker green when clicked */
+    background-color: #b662c7; 
   }
-  
+   */
   
   .header {
     display: flex;
@@ -468,7 +467,7 @@
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #72c8f0;
+    background-color: #ce9de8;
     color: white;
     font-size: 16px;
     cursor: pointer;
@@ -479,12 +478,12 @@
   }
 
   .availability-button:hover {
-    background-color: #4a97bb;
+    background-color: #b662c7;
     transform: scale(1.05);
   }
 
   .availability-button:active {
-    background-color: #3b6e9d;
+    background-color: #ab5bbb;
   }
 
   .forms-container {
@@ -493,3 +492,7 @@
     justify-content: space-around; /* Opcjonalnie: rozmieszczenie formularzy z odstępami */
     align-items: flex-start; /* Dopasowanie do górnej krawędzi */
   }
+
+
+
+  
