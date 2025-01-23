@@ -228,16 +228,18 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     max-width: 300px; /* Zmniejszenie szerokości */
-    font-size: 0.9rem; /* Zmniejszenie rozmiaru czcionki */
+    /* max-height: 550px; */
+    font-size: 0.7rem; /* Zmniejszenie rozmiaru czcionki */
+
   }
   
   .booking-form .form-group {
-    margin-bottom: 0.75rem; /* Mniejsze odstępy między polami */
+    margin-bottom: 0.3rem; /* Mniejsze odstępy między polami */
   }
   
   .booking-form label {
