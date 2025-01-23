@@ -426,7 +426,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    background-color: #ffffff; /* Light background for the header */
+    background-color: #ffffff; 
     border: 1px solid #ffffff; 
     /* border-radius: 5px; */
     margin-bottom: 20px; /* Space below the header */
