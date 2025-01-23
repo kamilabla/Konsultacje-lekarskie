@@ -10,7 +10,7 @@
 
 
 
-<button class="cart-button" (click)="toggleCart()">Koszyk</button>
+<!-- <button class="cart-button" (click)="toggleCart()">Koszyk</button>
 <div *ngIf="showCart" class="cart">
   <h3>Zawartość koszyka</h3>
   <ul>
@@ -18,6 +18,40 @@
       Data: {{ appointment.date }}, Godzina: {{ appointment.time }}, Szczegóły: {{ appointment.details }}
     </li>
   </ul>
+</div> -->
+
+<div class="accordion" id="cartAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="cartHeader">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#cartContent"
+        aria-expanded="false"
+        aria-controls="cartContent"
+      >
+        Koszyk
+      </button>
+    </h2>
+    <div
+      id="cartContent"
+      class="accordion-collapse collapse"
+      aria-labelledby="cartHeader"
+      data-bs-parent="#cartAccordion"
+    >
+      <div class="accordion-body">
+        <h3>Zawartość koszyka</h3>
+        <ul class="list-group">
+          <li *ngFor="let appointment of cart" class="list-group-item">
+            <strong>Data:</strong> {{ appointment.date }}, 
+            <strong>Godzina:</strong> {{ appointment.time }}, 
+            <strong>Szczegóły:</strong> {{ appointment.details }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
   
