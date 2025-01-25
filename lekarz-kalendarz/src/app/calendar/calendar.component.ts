@@ -471,9 +471,10 @@ export class CalendarComponent {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         const firebaseId = doc.id; // Pobierz ID dokumentu
-  
+        // console.log(data['date']);
+        
         if (data['date'] && data['date'].toDate) {
-          const consultationDate = data['date'].toDate(); // Konwersja Timestamp na Date
+          const consultationDate = data['date'].toDate(); // Konwersja Timestamp na Date          
           const day = this.days.find(
             (d) =>
               d.date.toISOString().split('T')[0] ===
@@ -481,12 +482,18 @@ export class CalendarComponent {
           );
   
           if (day) {
+            day.consultations.push(data as never)
             // Przypisanie do odpowiedniego slotu
-            const slot = day.slots.find(
-              (s) => s.time === data['startTime'] // Porównanie czasów jako string
-            );
-  
-            if (slot) {
+
+            const decStartTime = this.convertTimeToDecimal(data['startTime']);
+            const decEndTime = decStartTime + data['duration'];
+
+            const slots = day.slots.filter(el => (
+              this.convertTimeToDecimal(el.time) >= decStartTime && this.convertTimeToDecimal(el.time) + 0.5 <= decEndTime
+            ))
+
+
+            slots.forEach(slot => {
               slot.reserved = true;
               slot.type = data['type'];
               slot.details = data['notes'];
@@ -494,7 +501,21 @@ export class CalendarComponent {
               slot.gender = data['gender'];
               slot.age = data['age'];
               slot.firebaseId = firebaseId; // Przypisz firebaseId do slotu
-            }
+            })
+            // const slot = day.slots.find(
+            //   (s) => s.time === data['startTime'] // Porównanie czasów jako string
+            // );
+
+  
+            // if (slot) {
+            //   slot.reserved = true;
+            //   slot.type = data['type'];
+            //   slot.details = data['notes'];
+            //   slot.name = data['name'];
+            //   slot.gender = data['gender'];
+            //   slot.age = data['age'];
+            //   slot.firebaseId = firebaseId; // Przypisz firebaseId do slotu
+            // }
           }
         } else {
           console.error(
@@ -580,29 +601,40 @@ export class CalendarComponent {
   
         // Upewnij się, że istnieje pole `date` i jest w poprawnym formacie
         if (data['date'] && data['date'].toDate) {
-          const availabilityDate = data['date'].toDate(); // Konwersja Firebase Timestamp na Date
+          const availabilityDate = data['date'].toDate() as Date; // Konwersja Firebase Timestamp na Date
+
+          console.log("--------------------------");
+          console.log(doc.id)
+          console.log(availabilityDate.toISOString());
+          console.log(availabilityDate)
+
+          console.log(this.days.map(el => el.date.toISOString()))
+          console.log(availabilityDate.toISOString())
+
           const day = this.days.find(
             (d) =>
               d.date.toISOString().split('T')[0] ===
               availabilityDate.toISOString().split('T')[0]
           );
-  
-          if (day) {
-            // Aktualizacja slotów na podstawie dostępności z Firebase
-            const slotsFromFirebase = data['slots'] || [];
-            console.log('Sloty z Firebase:', slotsFromFirebase);
 
-            day.slots.forEach((slot) => {
-              const matchingSlot = slotsFromFirebase.find(
-                (firebaseSlot: any) => firebaseSlot.time === slot.time
-              );
-              if (matchingSlot) {
-                console.log('Przypisywanie slotu:', matchingSlot);
-                slot.reserved = matchingSlot.reserved;
-                slot.details = matchingSlot.details || '';
-              }
-            });
-          }
+          this.setAvailability(availabilityDate, this.convertTimeToDecimal(data['startTime']), this.convertTimeToDecimal(data['endTime']));
+  
+          // if (day) {
+          //   // Aktualizacja slotów na podstawie dostępności z Firebase
+          //   const slotsFromFirebase = data['slots'] || [];
+          //   console.log('Sloty z Firebase:', slotsFromFirebase);
+
+          //   day.slots.forEach((slot) => {
+          //     const matchingSlot = slotsFromFirebase.find(
+          //       (firebaseSlot: any) => firebaseSlot.time === slot.time
+          //     );
+          //     if (matchingSlot) {
+          //       console.log('Przypisywanie slotu:', matchingSlot);
+          //       slot.reserved = matchingSlot.reserved;
+          //       slot.details = matchingSlot.details || '';
+          //     }
+          //   });
+          // }
           if (!day) {
             console.error('Nie znaleziono dnia w kalendarzu dla dostępności:', data);
             return;
