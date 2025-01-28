@@ -398,7 +398,7 @@ export class CalendarComponent {
       });
   
       if (appointment) {
-        this.removeFromCart(appointment); // Usuń z koszyka
+        this.removeFromCart(appointment); 
       }
   
       this.selectedSlot.reserved = false;
@@ -575,7 +575,7 @@ export class CalendarComponent {
     );
   
     const availability = {
-      doctorId: '12345', // Możesz to dynamicznie przypisać
+      doctorId: '12345', 
       date: new Date(this.selectedDate),
       startTime: this.convertDecimalToTime(this.startHour),
       endTime: this.convertDecimalToTime(this.endHour),
@@ -650,7 +650,7 @@ export class CalendarComponent {
         }
       });
   
-      console.log('Dostępność lekarza została załadowana.');
+      console.log('Dostępność lekarza została załadowanaaaa.');
     } catch (error) {
       console.error('Błąd podczas pobierania dostępności:', error);
     }
