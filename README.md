@@ -13,7 +13,7 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
   <img width="958" alt="image" src="https://github.com/user-attachments/assets/0581f49c-c276-45e8-a614-8bc4f14706e6" />
 
 
-- **Main view**
+- **Main view**  
   After signing up or registering users are automatically redirected to the calendar view.
   <img width="949" alt="image" src="https://github.com/user-attachments/assets/ae26713e-e818-41ad-9252-2bd07cce95c4" />
   
@@ -38,13 +38,10 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 ## Technologies
 
-- **Backend: Python / Django / Flask or Node.js**  
-  The core logic for handling user authentication and appointment scheduling.
-
 - **Frontend: Angular**  
   A user-friendly interface for seamless interactions.
 
-- **Database: Firebase**  
+- **Backend and Database: Firebase**  
   Secure storage of appointment and user data.
 
 ---
