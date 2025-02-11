@@ -28,7 +28,7 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
   Doctors can define available slots and days of their unavailability. <br/>
   <img width="946" alt="image" src="https://github.com/user-attachments/assets/ed115460-bc47-4fae-9221-32c1a70a5f8a" />
   Example of available slots (green) and an unavailable day (purple). <br/>
-  <img width="950" alt="image" src="https://github.com/user-attachments/assets/13b962c2-ce3c-4af7-88c7-6e1dd3cabc31" />
+  <img width="945" alt="image" src="https://github.com/user-attachments/assets/6069af01-b329-4c4e-9fae-c78ffe2212b0" />
 
 
 
