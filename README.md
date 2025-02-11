@@ -63,8 +63,8 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 ---
 
-## Authors
-
+## Author
+**Kamila Błaszczyna**  [https://github.com/kamilabla]
 
 
 Feel free to reach out for any questions, suggestions, or feedback!
