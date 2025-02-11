@@ -41,7 +41,7 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 ## Technologies
 
-- **Frontend: Angular**  
+- **Frontend: Angular 19**  
 
 - **Backend and Database: Firebase**  
 
