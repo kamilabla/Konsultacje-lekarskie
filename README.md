@@ -19,13 +19,13 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
   
 
 - **Appointment Scheduling**  
-  Patients can browse available slots and book appointments.
+  Patients can browse through available slots and book multiple appointments. While filling the formular they are asked about the duration of a visit, type of consultation (which they can choose from available types), full name, gender, age and details for the doctor.
   <img width="946" alt="image" src="https://github.com/user-attachments/assets/2b0ca6be-37c9-4915-820b-123dff067133" />
 
 
 
 - **Doctor Availability Management**  
-  Doctors can define available and unavailable slots.
+  Doctors can define available slots and days of their unavailability.
   <img width="946" alt="image" src="https://github.com/user-attachments/assets/ed115460-bc47-4fae-9221-32c1a70a5f8a" />
 
 
