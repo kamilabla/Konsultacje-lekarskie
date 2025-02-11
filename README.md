@@ -20,7 +20,8 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 - **Appointment Scheduling**  
   Patients can browse available slots and book appointments.
-  <img width="628" alt="image" src="https://github.com/user-attachments/assets/aad6c7b6-6550-43b3-8a4b-bcd63086946b" />
+  <img width="946" alt="image" src="https://github.com/user-attachments/assets/2b0ca6be-37c9-4915-820b-123dff067133" />
+
 
 
 - **Doctor Availability Management**  
