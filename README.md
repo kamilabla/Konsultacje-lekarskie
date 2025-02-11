@@ -42,10 +42,8 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 ## Technologies
 
 - **Frontend: Angular**  
-  A user-friendly interface for seamless interactions.
 
 - **Backend and Database: Firebase**  
-  Secure storage of appointment and user data.
 
 ---
 
@@ -65,13 +63,9 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 ---
 
-## Final Version
-
-The final version of the project is located in the **`FinalVersion`** folder.
-
----
-
 ## Authors
+
+
 
 Feel free to reach out for any questions, suggestions, or feedback!
 
