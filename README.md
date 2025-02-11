@@ -33,7 +33,7 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 
 
 - **Appointment Cart View**  
-  Patients can see their scheduled appointments. <br/>
+  Patients can look through their scheduled appointments by clicking the button of a cart. <br/>
   <img width="628" alt="image" src="https://github.com/user-attachments/assets/dea28be5-38a3-4c60-b23c-824d3f33113b" />
 
 
