@@ -64,7 +64,8 @@ This project is a scheduling system for **doctors and patients**, enabling appoi
 ---
 
 ## Author
-**Kamila Błaszczyna**  LinkedIn: [Kamila Błaszczyna](https://www.linkedin.com/in/kamila-b%C5%82aszczyna-9690432b5/)
+**Kamila Błaszczyna**  
+-[LinkedIn](https://www.linkedin.com/in/kamila-b%C5%82aszczyna-9690432b5/)
 
 
 Feel free to reach out for any questions, suggestions, or feedback!
